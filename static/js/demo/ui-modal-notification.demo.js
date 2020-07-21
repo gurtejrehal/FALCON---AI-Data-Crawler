@@ -1,0 +1,1 @@
+var handleToastsInit=function(){$('[data-init="toast"]').toast('show');};var handleToastToggle=function(){$(document).on('click','[data-toggle="toast"]',function(e){e.preventDefault();var targetElm=$(this).attr('data-target');$(targetElm).toast('show');});};$(document).ready(function(){handleToastsInit();handleToastToggle();});

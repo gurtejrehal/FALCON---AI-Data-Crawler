@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Studio | Login</title>
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+	<meta content="" name="description" />
+	<meta content="" name="author" />
+	<link href="{% static 'css/app.min.css' %}" rel="stylesheet" />
+</head>
+
+<body>
+	<div id="app" class="app app-full-height app-without-header">
+		<div class="login">
+			<div class="login-content">
+				<form action="." method="post" name="login_form">
+					{% csrf_token %}
+<!--					{{ form.as_p }}-->
+					<h1 class="text-center">Sign In</h1>
+					<div class="text-muted text-center mb-4">For your protection, please verify your identity.</div>
+					<div class="form-group">
+						<label for="id_username">Username</label>
+						<input name="username" type="text" class="form-control form-control-lg fs-15px" value="" placeholder="username" id="id_username"/>
+					</div>
+					<div class="form-group">
+						<div class="d-flex">
+							<label for="id_password">Password</label>
+<a href="#" class="ml-auto text-muted">Forgot password?</a>
+						</div>
+						<input name="password" type="password" class="form-control form-control-lg fs-15px" value="" placeholder="Enter your password" id="id_password"/>
+					</div>
+					<div class="form-group">
+						<div class="custom-control custom-checkbox">
+							<input class="custom-control-input" type="checkbox" value="" id="customCheck1" />
+							<label class="custom-control-label fw-500" for="customCheck1">Remember me</label>
+						</div>
+					</div>
+					<button type="submit" class="btn btn-primary btn-lg btn-block fw-500 mb-3">Sign In</button>
+					<input type="hidden" name="next" value="{{ next }}" />
+					<div class="text-center text-muted">Don't have an account yet? <a href="page_register.html">Sign up</a>.</div>
+				</form>
+			</div>
+		</div>
+<a href="#" data-click="scroll-top" class="btn-scroll-top fade"><i class="fa fa-arrow-up"></i></a>
+	</div>
+	<script src="{% static 'js/app.min.js' %}" type="26ec60d268a811fbc38dedb5-text/javascript"></script>
+	<script type="26ec60d268a811fbc38dedb5-text/javascript">
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','../../www.google-analytics.com/analytics.js' %}','ga');
+	
+		  ga('create', 'UA-53034621-1', 'auto');
+		  ga('send', 'pageview');
+	</script>
+	<script src="../../ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js' %}" data-cf-settings="26ec60d268a811fbc38dedb5-|49" defer=""></script>
+</body>
+
+</html>

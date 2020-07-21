@@ -18,6 +18,9 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
+STATICFILES_DIRS = [STATIC_DIR, ]
+MEDIA_ROOT = MEDIA_DIR
+
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static') # to be removed
 
 # Quick-start development settings - unsuitable for production
@@ -35,12 +38,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crawler.apps.CrawlerConfig',
 ]
 
 MIDDLEWARE = [
@@ -123,3 +128,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+
+REGISTRATION_AUTO_LOGIN = True
+
+LOGIN_URL = 'auth_login'
+LOGIN_REDIRECT_URL = 'crawler:index'
+LOGOUT_REDIRECT_URL = '/'
