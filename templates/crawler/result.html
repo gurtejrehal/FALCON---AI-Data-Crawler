@@ -1,9 +1,13 @@
 {% extends 'crawler/base.html' %}
 {% load static %}
 
+{% block title %} Showing results {% endblock %}
+
 {% block custom_style %}
 <style>
-#chartjs-tooltip {
+
+{% for item in list1 %}
+#chartjs-tooltip_{{ forloop.counter }} {
 			opacity: 1;
 			position: absolute;
 			background: rgba(224, 224, 224, .9);
@@ -15,6 +19,22 @@
 			transform: translate(-50%, 0);
 			box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
 		}
+		{% endfor %}
+
+{% for item in list2 %}
+#chartjs-tooltip_{{ forloop.counter|add:'2' }} {
+			opacity: 1;
+			position: absolute;
+			background: rgba(224, 224, 224, .9);
+			color: black;
+			border-radius: 10px;
+			-webkit-transition: all .1s ease;
+			transition: all .1s ease;
+			-webkit-transform: translate(-50%, 0);
+			transform: translate(-50%, 0);
+			box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+		}
+		{% endfor %}
 
 		.chartjs-tooltip-key {
 			display: inline-block;
@@ -38,30 +58,48 @@
 <div class="container">
 
   <ul class="nav nav-tabs">
-  <li class="nav-item mr-1"><a href="#home" class="nav-link active" data-toggle="tab">Result - keyword 1</a></li>
-  <li class="nav-item mr-1"><a href="#profile" class="nav-link" data-toggle="tab">Result - keyword 2</a></li>
+
+    {% for query in list1 %}
+  <li class="nav-item mr-1"><a href="#tab_{{ forloop.counter }}" class="nav-link {% if forloop.counter == 1 %}active{% endif %}" data-toggle="tab">{{ query }}</a></li>
+    {% endfor %}
+
+    {% if list2 %}
   <li class="nav-item mr-1 dropdown">
     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
       More
     </a>
     <div class="dropdown-menu">
-      <a href="#dropdown1" class="dropdown-item" data-toggle="tab">Result - keyword 3</a>
-      <a href="#dropdown2" class="dropdown-item" data-toggle="tab">Result - keyword 4</a>
+      {% for query in list2 %}
+      <a href="#dropdown_{{ forloop.counter }}" class="dropdown-item" data-toggle="tab">{{ query }}</a>
+      {% endfor %}
     </div>
   </li>
+    {% endif %}
 </ul>
+
 <div class="tab-content pt-3">
-  <div class="tab-pane fade show active" id="home">
-    <canvas id="chart-area"></canvas>
-    <div id="chartjs-tooltip">
+  {% for query in list1 %}
+  <div class="tab-pane fade show {% if forloop.counter == 1 %}active{% endif %}" id="tab_{{ forloop.counter }}">
+    <canvas id="chart-area_{{ forloop.counter }}"></canvas>
+    <div id="chartjs-tooltip_{{ forloop.counter }}">
                 <table></table>
     </div>
 
 
   </div>
-  <div class="tab-pane fade" id="profile">...</div>
-  <div class="tab-pane fade" id="dropdown1">...</div>
-  <div class="tab-pane fade" id="dropdown2">...</div>
+  {% endfor %}
+
+  {% if list2 %}
+  {% for query in list2 %}
+  <div class="tab-pane fade" id="dropdown_{{ forloop.counter }}">
+    <canvas id="chart-area_{{ forloop.counter|add:'2' }}"></canvas>
+    <div id="chartjs-tooltip_{{ forloop.counter|add:'2' }}">
+                <table></table>
+    </div>
+  </div>
+  {% endfor %}
+  {% endif %}
+
 </div>
 
 
@@ -100,9 +138,13 @@
 	</script>
 	
 <script>
+
+
+{% for key, value in count_list1.items %}
+
 Chart.defaults.global.tooltips.custom = function(tooltip) {
 			// Tooltip Element
-			var tooltipEl = document.getElementById('chartjs-tooltip');
+			var tooltipEl = document.getElementById('chartjs-tooltip_{{ forloop.counter }}');
 
 			// Hide if no tooltip
 			if (tooltip.opacity === 0) {
@@ -122,17 +164,21 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 				return bodyItem.lines;
 			}
 
+
+
 			// Set Text
 			if (tooltip.body) {
 				var titleLines = tooltip.title || [];
 				var bodyLines = tooltip.body.map(getBody);
+                var results = {{ temp_list1|safe }}
+                var resultLines = results || []
 
 				var innerHtml = '<thead>';
 
-				titleLines.forEach(function(title) {
+				titleLines.forEach(function(title,i) {
 					innerHtml += '<tr><th>' + title + '</th></tr>';
 				});
-				innerHtml += '</thead><tbody>';
+				innerHtml += '</thead><tbody class="text-center mb-2" >';
 
 				bodyLines.forEach(function(body, i) {
 					var colors = tooltip.labelColors[i];
@@ -142,16 +188,27 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 					var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
 					innerHtml += '<tr><td>' + span + body + '</td></tr>';
 				});
+
+
+				resultLines.forEach(function(body, i){
+				  for(j=0; j<body.length;j++){
+				      innerHtml += '<tr><td><a class="btn btn-black btn-sm" data-toggle="modal" data-target="#modalLg_' + j + '" href="#" >' + 'Link ' + j + '</a></td></tr>';
+				  }
+
+				});
+
+				innerHtml += '<tr class="mt-2"><td><a href="#">See More</a></td></tr>';
+
 				innerHtml += '</tbody>';
-				
+
 <!--				innerHtml += '<br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLg">click me</button><br><a href="google.com">See more</a>';-->
 
-                innerHtml += `{% autoescape off %}{% for key, value in results.items %}
-                <br>{% for link in value %}
-                  <a href="{{ link }}">link {{ forloop.counter }}</a><br>
-                {% endfor %}
+<!--                innerHtml += `{% autoescape off %}{% for key, value in results.items %}-->
+<!--                <br>{% for link in value %}-->
+<!--                  <a href="{{ link }}">link {{ forloop.counter }}</a><br>-->
+<!--                {% endfor %}-->
 
-                {% endfor %}<br><a href="#">See more</a>{% endautoescape %}`;
+<!--                {% endfor %}<br><a href="#">See more</a>{% endautoescape %}`;-->
 
 				var tableRoot = tooltipEl.querySelector('table');
 				tableRoot.innerHTML = innerHtml;
@@ -170,11 +227,12 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 			tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
 		};
 
+
 		var config = {
 			type: 'doughnut',
 			data: {
 				datasets: [{
-					data: {{ data }},
+					data: {{ value|safe }},
 					backgroundColor: [
 						'#111',
 						'#f59042',
@@ -182,7 +240,7 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 						'#444'
 					],
 				}],
-				labels: {{ labels|safe }}
+				labels: {{ labels| safe }}
 			},
 			options: {
 				events: ['mousemove', 'mouseout'],
@@ -207,22 +265,22 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 				},
 				onHover: function (event, chartElement) {
 			      event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-			      myPie.update()
+			      myPie_{{ forloop.counter }}.update()
     				chartElement[0]._model.outerRadius += 20
   
 			    },
 				tooltips: {
-					enabled: false,
+					enabled: true,
 				}
 			}
 		};
 
-		window.onload = function() {
-			var ctx = document.getElementById('chart-area').getContext('2d');
-			window.myPie = new Chart(ctx, config);
 
-			document.getElementById("chart-area").onclick = function(evt) {
-	      var activePoints = myPie.getElementsAtEvent(evt);
+			var ctx_{{ forloop.counter }} = document.getElementById('chart-area_{{ forloop.counter }}').getContext('2d');
+			window.myPie_{{ forloop.counter }} = new Chart(ctx_{{ forloop.counter }}, config);
+
+			document.getElementById("chart-area_{{ forloop.counter }}").onclick = function(evt) {
+	      var activePoints = myPie_{{ forloop.counter }}.getElementsAtEvent(evt);
 	      if (activePoints[0]) {
 	        var chartData = activePoints[0]['_chart'].config.data;
 	        var idx = activePoints[0]['_index'];
@@ -235,7 +293,7 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 	        // alert(url);
 	      }
     };
-		};
+
 
 
 
@@ -261,7 +319,196 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
   }
 });
 
+{% endfor %}
+
   
+</script>
+
+<script>
+
+
+{% for key, value in count_list2.items %}
+
+Chart.defaults.global.tooltips.custom = function(tooltip) {
+			// Tooltip Element
+			var tooltipEl = document.getElementById('chartjs-tooltip_{{ forloop.counter|add:'2' }}');
+
+			// Hide if no tooltip
+			if (tooltip.opacity === 0) {
+				tooltipEl.style.opacity = 0;
+				return;
+			}
+
+			// Set caret Position
+			tooltipEl.classList.remove('above', 'below', 'no-transform');
+			if (tooltip.yAlign) {
+				tooltipEl.classList.add(tooltip.yAlign);
+			} else {
+				tooltipEl.classList.add('no-transform');
+			}
+
+			function getBody(bodyItem) {
+				return bodyItem.lines;
+			}
+
+
+
+			// Set Text
+			if (tooltip.body) {
+				var titleLines = tooltip.title || [];
+				var bodyLines = tooltip.body.map(getBody);
+                var results = {{ temp_list1|safe }}
+                var resultLines = results || []
+
+				var innerHtml = '<thead>';
+
+				titleLines.forEach(function(title,i) {
+					innerHtml += '<tr><th>' + title + '</th></tr>';
+				});
+				innerHtml += '</thead><tbody class="text-center mb-2" >';
+
+				bodyLines.forEach(function(body, i) {
+					var colors = tooltip.labelColors[i];
+					var style = 'background:' + colors.backgroundColor;
+					style += '; border-color:' + colors.borderColor;
+					style += '; border-width: 2px';
+					var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
+					innerHtml += '<tr><td>' + span + body + '</td></tr>';
+				});
+
+
+				resultLines.forEach(function(body, i){
+				  for(j=0; j<body.length;j++){
+				      innerHtml += '<tr><td><a class="btn btn-black btn-sm" data-toggle="modal" data-target="#modalLg_' + j + '" href="#" >' + 'Link ' + j + '</a></td></tr>';
+				  }
+
+				});
+
+				innerHtml += '<tr class="mt-2"><td><a href="#">See More</a></td></tr>';
+
+				innerHtml += '</tbody>';
+
+<!--				innerHtml += '<br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLg">click me</button><br><a href="google.com">See more</a>';-->
+
+<!--                innerHtml += `{% autoescape off %}{% for key, value in results.items %}-->
+<!--                <br>{% for link in value %}-->
+<!--                  <a href="{{ link }}">link {{ forloop.counter }}</a><br>-->
+<!--                {% endfor %}-->
+
+<!--                {% endfor %}<br><a href="#">See more</a>{% endautoescape %}`;-->
+
+				var tableRoot = tooltipEl.querySelector('table');
+				tableRoot.innerHTML = innerHtml;
+			}
+
+			var positionY = this._chart.canvas.offsetTop;
+			var positionX = this._chart.canvas.offsetLeft;
+
+			// Display, position, and set styles for font
+			tooltipEl.style.opacity = 1;
+			tooltipEl.style.left = window.pageXOffset + positionX + tooltip.caretX + 'px';
+			tooltipEl.style.top = window.pageYOffset + positionY + tooltip.caretY -200+ 'px';
+			tooltipEl.style.fontFamily = tooltip._bodyFontFamily;
+			tooltipEl.style.fontSize = tooltip.bodyFontSize;
+			tooltipEl.style.fontStyle = tooltip._bodyFontStyle;
+			tooltipEl.style.padding = tooltip.yPadding + 'px ' + tooltip.xPadding + 'px';
+		};
+
+
+		var config = {
+			type: 'doughnut',
+			data: {
+				datasets: [{
+					data: {{ value|safe }},
+					backgroundColor: [
+						'#111',
+						'#f59042',
+						'#555644',
+						'#444'
+					],
+				}],
+				labels: {{ labels| safe }}
+			},
+			options: {
+				events: ['mousemove', 'mouseout'],
+				responsive: true,
+				plugins: {
+		          labels: [
+					    {
+					      render: 'label',
+					      position: 'outside',
+					      fontFamily: '"Montserrat"'
+					    },
+					    {
+					      render: 'percentage',
+					      fontFamily: '"Montserrat"',
+					      fontColor: "#ffffff"
+					    }
+					  ]
+		        },
+				legend: {
+					display: true,
+					position: 'right'
+				},
+				onHover: function (event, chartElement) {
+			      event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+			      myPie_{{ forloop.counter|add:'2' }}.update()
+    				chartElement[0]._model.outerRadius += 20
+
+			    },
+				tooltips: {
+					enabled: true,
+				}
+			}
+		};
+
+
+			var ctx_{{ forloop.counter|add:'2' }} = document.getElementById('chart-area_{{ forloop.counter|add:'2' }}').getContext('2d');
+			window.myPie_{{ forloop.counter|add:'2' }} = new Chart(ctx_{{ forloop.counter|add:'2' }}, config);
+
+			document.getElementById("chart-area_{{ forloop.counter|add:'2' }}").onclick = function(evt) {
+	      var activePoints = myPie_{{ forloop.counter|add:'2' }}.getElementsAtEvent(evt);
+	      if (activePoints[0]) {
+	        var chartData = activePoints[0]['_chart'].config.data;
+	        var idx = activePoints[0]['_index'];
+
+	        var label = chartData.labels[idx];
+	        var value = chartData.datasets[0].data[idx];
+
+	        var url = "http://example.com/?label=" + label + "&value=" + value;
+	        $('#details').modal('show');
+	        // alert(url);
+	      }
+    };
+
+
+
+
+
+
+  Chart.pluginService.register({
+  beforeDraw: function(chart) {
+    var width = chart.chart.width,
+        height = chart.chart.height,
+        ctx = chart.chart.ctx;
+
+    ctx.restore();
+    var fontSize = ((height / 200 )+0.5).toFixed(2);
+    ctx.font = fontSize  + "em Montserrat";
+    ctx.textBaseline = "middle";
+
+    var text = "FALCON",
+        textX = Math.round((width - ctx.measureText(text).width) / 2 - 70),
+        textY = height / 2;
+
+    ctx.fillText(text, textX, textY);
+    ctx.save();
+  }
+});
+
+{% endfor %}
+
+
 </script>
 <script src="../../ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js" data-cf-settings="59f984106ec2e39727363fa8-|49" defer=""></script></body>
 

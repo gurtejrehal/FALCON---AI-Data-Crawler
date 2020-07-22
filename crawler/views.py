@@ -84,21 +84,54 @@ def process(request):
         filters = request.POST['multiple_select']
         print(type(main_search), type(filters))
 
-        # main_search_list = [ x.strip(' ') for x in main_search.split(',')]
+        main_search_list = [ x.strip(' ') for x in main_search.split(',')]
         filters_list = [x.strip(' ') for x in filters.split(',')]
 
-        result = crawling(main_search, filters_list)
+        result1 = dict()
+        result2 = dict()
+        result3 = dict()
+        result4 = dict()
+        list1 = list()
+        list2 = list()
+        temp_list1 = list()
+
+        # print(result1)
 
 
-        count_list = count_items(result[0])[1]
+        # print(count_list)
 
-        print(result[1])
+        if len(main_search_list)>2:
+            list1 = main_search_list[:2]
+            list2 = main_search_list[3:]
+
+        else:
+            list1 = main_search_list
 
 
+        for query in list1:
+            result1[query] = crawling(query, filters_list)[0]
+            result2[query] = crawling(query, filters_list)[1]
+            temp_list1 = crawling(query, filters_list)[1]
+
+        for query in list2:
+            result3[query] = crawling(query, filters_list)[0]
+            result4[query] = crawling(query, filters_list)[1]
+
+        count_list1 = count_items(result1)
+        count_list2 = count_items(result3)
+
+        print(count_list1)
+
+        print(temp_list1)
         context = {
             'labels': filters_list,
-            'data': count_list,
-            'results': result[1]
+            'result1': result2,
+            'result2': result4,
+            'list1': list1,
+            'list2': list2,
+            'count_list1': count_list1,
+            'count_list2': count_list2,
+            'temp_list1': temp_list1
         }
 
         return render(request, 'crawler/result.html', context=context)

@@ -39,13 +39,13 @@ def crawling(query, keywords):
         'cyber bullying': cyber_bullying
     }
 
-    reduced = {
-        'general': general[:4],
-        'crime': crime[:4],
-        'child abuse': child_abuse[:4],
-        'woman abuse': women_abuse[:4],
-        'cyber bullying': cyber_bullying[:4]
-    }
+    reduced = [
+        general[:4],
+        crime[:4],
+        child_abuse[:4],
+        women_abuse[:4],
+        cyber_bullying[:4]
+    ]
 
 
 
@@ -55,10 +55,15 @@ def crawling(query, keywords):
 def count_items(context):
 
     list_count_dict = dict()
-    list_count_list = list()
+    temp = list()
 
     for key, value in context.items():
-        list_count_dict[key] = len(value)
-        list_count_list.append(len(value))
 
-    return (list_count_dict, list_count_list)
+        for key2, value2 in value.items():
+            temp.append(len(value2))
+
+        list_count_dict[key] = temp
+        temp = []
+
+
+    return list_count_dict

@@ -35,7 +35,7 @@
 						<span class="bar"></span>
 					</button>
 				</div>
-				<a href="#" class="brand-logo">
+				<a href="{% url 'crawler:index' %}" class="brand-logo">
 					<img src="{% static 'img/logo.png' %}" height="20px" />
 				</a>
 			</div>
@@ -102,7 +102,7 @@
 					<div class="menu-item active">
 						<a href="index-2.html" class="menu-link">
 <span class="menu-icon"><i class="fa fa-laptop"></i></span>
-							<span class="menu-text">Dashboard</span>
+							<span class="menu-text">{% if request.path == '/result/' %}Result{% else %}Dashboard{% endif %}</span>
 						</a>
 					</div>
 					<div class="menu-item">
@@ -215,12 +215,13 @@
 
 
 
-
-	<div class="modal fade" id="modalLg">
+{% for item in temp_list1 %}
+	{% for i in item %}
+	<div class="modal fade" id="modalLg_{{ forloop.counter0 }}">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modal title</h5>
+        <h5 class="modal-title">Link - {{ i }}</h5>
         <button type="button" class="close" data-dismiss="modal">
           <span>×</span>
         </button>
@@ -235,6 +236,9 @@
     </div>
   </div>
 </div>
+	{% endfor %}
+{% endfor %}
+
 
 <div class="modal modal-cover fade" id="details">
   <div class="modal-dialog ">
