@@ -3,7 +3,7 @@
 {% block body %}
 
 			<h1 class="page-header mb-3">
-Hi, {{ userprofile.user.username|capfirst }}. <small>tell us what's you are searching today.</small>
+Hi, {{ userprofile.user.username|capfirst }}.<small>tell us what's you are searching today.</small>
 </h1>
 			<div class="row">
 				<div class="col-xl-9">
@@ -72,12 +72,13 @@ Hi, {{ userprofile.user.username|capfirst }}. <small>tell us what's you are sear
 									<img src="{% static 'img/icon/email.svg' %}" class="ml-auto d-block mb-n3" style="max-height: 105px" />
 								</div>
 								<div class="card-body position-relative">
-									<h5 class="text-white-transparent-8 mb-3 fs-16px">Unread email</h5>
-									<h3 class="text-white mt-n1">30</h3>
-									<div class="progress bg-black-transparent-5 mb-2" style="height: 6px">
-										<div class="progrss-bar progress-bar-striped bg-white" style="width: 80%"></div>
-									</div>
-									<div class="text-white-transparent-8 mb-4"><i class="fa fa-caret-down"></i> 5% decrease
+									<h5 class="text-white-transparent-8 mb-3 fs-16px">Your STATS</h5>
+									<small class="text-white ml-1"> Your scraping time:</small>
+									<h3 class="text-white mt-n1">{{ userprofile.time_spent_scraping }} hours</h3>
+
+									<div class="text-white-transparent-8 mb-4">
+										{% if userprofile.percent.0 %}<i class="fa fa-caret-up"></i> {{ userprofile.percent.1 }}% increase
+										{% else %}<i class="fa fa-caret-down"></i> {{ userprofile.percent.1 }}% decrease {% endif %}
 										<br />compare to last week</div>
 									<div><a href="#" class="text-white d-flex align-items-center text-decoration-none">View report <i class="fa fa-chevron-right ml-2 text-white-transparent-5"></i></a>
 									</div>
@@ -88,14 +89,16 @@ Hi, {{ userprofile.user.username|capfirst }}. <small>tell us what's you are sear
 									<img src="{% static 'img/icon/browser.svg' %}" class="ml-auto d-block mb-n3" style="max-height: 105px" />
 								</div>
 								<div class="card-body position-relative">
-									<h5 class="text-white-transparent-8 mb-3 fs-16px">Page Views</h5>
-									<h3 class="text-white mt-n1">320.4k</h3>
-									<div class="progress bg-black-transparent-5 mb-2" style="height: 6px">
-										<div class="progrss-bar progress-bar-striped bg-white" style="width: 80%"></div>
-									</div>
-									<div class="text-white-transparent-8 mb-4"><i class="fa fa-caret-up"></i> 20% increase
-										<br />compare to last week</div>
-									<div><a href="#" class="text-white d-flex align-items-center text-decoration-none">View report <i class="fa fa-chevron-right ml-2 text-white-transparent-5"></i></a>
+									<h5 class="text-white-transparent-8 mb-3 fs-16px">Tweak Concurrency</h5>
+									<small class="text-white ml-1"> Current:</small>
+									<span id="concurrent_update">
+										<h3 class="text-white mt-n1">{{ userprofile.concurrency }} workers</h3>
+										<div class="progress bg-black-transparent-5 mb-2" style="height: 6px">
+											<div class="progrss-bar progress-bar-striped bg-white" style="width: {{ userprofile.concurrency_percent }}%"></div>
+										</div>
+									</span>
+
+									<div><a href="#" class="text-white d-flex align-items-center text-decoration-none" data-toggle="modal" data-target="#concurrency">Change settings <i class="fa fa-chevron-right ml-2 text-white-transparent-5"></i></a>
 									</div>
 								</div>
 							</div>

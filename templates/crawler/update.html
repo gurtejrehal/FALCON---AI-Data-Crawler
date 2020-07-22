@@ -1,0 +1,31 @@
+<h3 class="text-white mt-n1">{{ update }} workers</h3>
+<div class="progress bg-black-transparent-5 mb-2" style="height: 6px">
+    <div class="progrss-bar progress-bar-striped bg-white" style="width: {{ update_percent }}%"></div>
+</div>
+
+<input type="hidden" value="{{ new_count }}" id="new_count">
+
+
+
+<!--	notifications  -->
+	{% if messages %}<div class="toasts-container">
+
+	{% for message in messages %}
+
+		<div class="toast fade hide" data-autohide="false">
+		  <div class="toast-header">
+			<i class="far fa-bell text-muted mr-2"></i>
+			<strong class="mr-auto">Concurrency</strong>
+			<small>1 sec ago</small>
+			<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+			  <span>×</span>
+			</button>
+		  </div>
+		  <div class="toast-body">
+			{{ message }}
+		  </div>
+		</div>
+
+	{% endfor %}
+    </div>
+	{% endif %}

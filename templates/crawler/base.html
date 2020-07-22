@@ -47,62 +47,30 @@
 						<input type="text" class="form-control" placeholder="Search menu..." />
 					</div>
 				</form>
-				<div class="menu-item dropdown">
+				<div class="menu-item dropdown" id="notification-read">
 					<a href="#" data-toggle="dropdown" data-display="static" class="menu-link">
 						<div class="menu-icon"><i class="fa fa-bell nav-icon"></i>
 						</div>
-						<div class="menu-label">3</div>
+						{% csrf_token %}
+						<div class="menu-label" id="unread-update">{{ unread_count }}</div>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right dropdown-notification">
 						<h6 class="dropdown-header text-gray-900 mb-1">Notifications</h6>
+						{% for notification in notifications %}
 						<a href="#" class="dropdown-notification-item">
 							<div class="dropdown-notification-icon">
 <i class="fa fa-receipt fa-lg fa-fw text-success"></i>
 							</div>
 							<div class="dropdown-notification-info">
-								<div class="title">Your store has a new order for 2 items totaling $1,299.00</div>
-								<div class="time">just now</div>
+								<div class="title">{{ notification.content }}</div>
+								<div class="time">{{ notification.whenpublished }}</div>
 							</div>
 							<div class="dropdown-notification-arrow">
 <i class="fa fa-chevron-right"></i>
 							</div>
 						</a>
-						<a href="#" class="dropdown-notification-item">
-							<div class="dropdown-notification-icon">
-<i class="far fa-user-circle fa-lg fa-fw text-muted"></i>
-							</div>
-							<div class="dropdown-notification-info">
-								<div class="title">3 new customer account is created</div>
-								<div class="time">2 minutes ago</div>
-							</div>
-							<div class="dropdown-notification-arrow">
-<i class="fa fa-chevron-right"></i>
-							</div>
-						</a>
-						<a href="#" class="dropdown-notification-item">
-							<div class="dropdown-notification-icon">
-								<img src="{% static 'img/icon/android.svg' %}" width="26px" alt="" />
-							</div>
-							<div class="dropdown-notification-info">
-								<div class="title">Your android application has been approved</div>
-								<div class="time">5 minutes ago</div>
-							</div>
-							<div class="dropdown-notification-arrow">
-<i class="fa fa-chevron-right"></i>
-							</div>
-						</a>
-						<a href="#" class="dropdown-notification-item">
-							<div class="dropdown-notification-icon">
-								<img src="{% static 'img/icon/paypal.svg' %}" width="26px" alt="" />
-							</div>
-							<div class="dropdown-notification-info">
-								<div class="title">Paypal payment method has been enabled for your store</div>
-								<div class="time">10 minutes ago</div>
-							</div>
-							<div class="dropdown-notification-arrow">
-<i class="fa fa-chevron-right"></i>
-							</div>
-						</a>
+						{% endfor %}
+
 						<div class="p-2 text-center mb-n1">
 <a href="#" class="text-gray-800 text-decoration-none">See all</a>
 						</div>
@@ -122,7 +90,7 @@
 						<a class="dropdown-item d-flex align-items-center" href="#">Calendar <i class="fa fa-calendar-alt fa-fw ml-auto text-gray-400 f-s-16"></i></a>
 						<a class="dropdown-item d-flex align-items-center" href="#">Setting <i class="fa fa-wrench fa-fw ml-auto text-gray-400 f-s-16"></i></a>
 						<div class="dropdown-divider"></div>
-<a class="dropdown-item d-flex align-items-center" href="#">Log Out <i class="fa fa-toggle-off fa-fw ml-auto text-gray-400 f-s-16"></i></a>
+<a class="dropdown-item d-flex align-items-center" href="{% url 'auth_logout' %}">Log Out <i class="fa fa-toggle-off fa-fw ml-auto text-gray-400 f-s-16"></i></a>
 					</div>
 				</div>
 			</div>
@@ -220,6 +188,33 @@
 	</div>
 
 
+	<form action="." id="concurrency-form" method="post">
+		{% csrf_token %}
+	<div class="modal fade" id="concurrency">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Change Concurrency</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+		  <label for="customRange" >Tweaking may be <span class="text-danger">potential</span> to other process</label>
+			<input type="range" class="custom-range" min="1" max="10"  value="{{ userprofile.concurrency }}" id="customRange">
+		  	<p class="text-center font-weight-bold lead" id="rangeValue"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
+
+
 
 	<div class="modal fade" id="modalLg">
   <div class="modal-dialog modal-dialog-centered">
@@ -262,12 +257,17 @@
 </div>
 
 
+
+
+
 	{% block script %}
 
 	<script
   src="https://code.jquery.com/jquery-3.5.1.js"
   integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
   crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 	<script src="{% static 'plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script>
 	<script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js' %}"></script>
@@ -292,7 +292,59 @@
 
 		select.set(['crime', 'child_abuse'])
 
+
+		var slider = document.getElementById("customRange");
+		var output = document.getElementById("rangeValue");
+		output.innerHTML = slider.value;
+
+		slider.oninput = function() {
+		  output.innerHTML = this.value;
+		}
+
     </script>
+
+	<script>
+	$('#concurrency-form').submit(function(event) {
+
+	event.preventDefault();
+    data = {
+            "query" : $('#customRange').val(),
+            "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()
+     }
+    console.log(data)
+    $.ajax({
+            url: "/update/",
+            type: "POST",
+            data: data,
+            success: function(response){
+            	$('#concurrent_update').html(response);
+            	$('#concurrency').modal('hide');
+            	$('.toast').toast('show');
+            	new_count = $('#new_count').val();
+            	$('#unread-update').html(new_count);
+                console.log(response)
+
+            }
+
+        });
+
+});
+
+
+$('#notification-read').click(function(){
+	$.ajax({
+            url: "/read/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#unread-update').html(response);
+            }
+
+        });
+
+});
+
+	</script>
 
 	<script src="../../ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js' %}" data-cf-settings="aefc1fea19d2ed77008968e1-|49" defer=""></script>
 	<script defer src="../../static.cloudflareinsights.com/beacon.min.js' %}" data-cf-beacon='{"rayId":"5b5c74f4984606dd","version":"2020.6.0","si":10}'></script>

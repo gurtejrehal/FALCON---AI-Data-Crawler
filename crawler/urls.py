@@ -5,5 +5,7 @@ app_name = 'crawler'
 
 urlpatterns = [
     path('dashboard/', views.index, name='index'),
+    path('update/', views.update, name='update'),
+    path('read/', views.read, name='read'),
     path('test/', views.test, name='test'),
 ]
