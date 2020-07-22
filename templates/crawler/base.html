@@ -292,6 +292,8 @@
 
 		select.set(['crime', 'child_abuse'])
 
+		$('#multiple_select').val(select.selected());
+
 
 		var slider = document.getElementById("customRange");
 		var output = document.getElementById("rangeValue");
@@ -304,6 +306,7 @@
     </script>
 
 	<script>
+<!--	console.log($("#tagsinput-default").tagsinput('items'))-->
 	$('#concurrency-form').submit(function(event) {
 
 	event.preventDefault();
@@ -343,6 +346,22 @@ $('#notification-read').click(function(){
         });
 
 });
+
+
+$(function() {
+    $('#multiple').change(function() {
+        console.log($(this).val());
+
+        $('#multiple_select').val(select.selected());
+    });
+});
+
+
+
+
+
+
+
 
 	</script>
 

@@ -144,7 +144,14 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 				});
 				innerHtml += '</tbody>';
 				
-				innerHtml += '<br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLg">click me</button><br><a href="google.com">See more</a>';
+<!--				innerHtml += '<br><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalLg">click me</button><br><a href="google.com">See more</a>';-->
+
+                innerHtml += `{% autoescape off %}{% for key, value in results.items %}
+                <br>{% for link in value %}
+                  <a href="{{ link }}">link {{ forloop.counter }}</a><br>
+                {% endfor %}
+
+                {% endfor %}<br><a href="#">See more</a>{% endautoescape %}`;
 
 				var tableRoot = tooltipEl.querySelector('table');
 				tableRoot.innerHTML = innerHtml;
@@ -167,7 +174,7 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 			type: 'doughnut',
 			data: {
 				datasets: [{
-					data: [300, 50, 100, 40],
+					data: {{ data }},
 					backgroundColor: [
 						'#111',
 						'#f59042',
@@ -175,12 +182,7 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
 						'#444'
 					],
 				}],
-				labels: [
-					'Child Abuse',
-					'Woman Abuse',
-					'Pornography',
-					'cazz',
-				]
+				labels: {{ labels|safe }}
 			},
 			options: {
 				events: ['mousemove', 'mouseout'],

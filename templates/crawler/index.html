@@ -18,6 +18,9 @@ Hi, {{ userprofile.user.username|capfirst }}.<small>tell us what's you are searc
 								</div>
 							</div>
 						</div>
+
+					<form action="{% url 'crawler:process' %}" method="post" id="main_search">
+						{% csrf_token %}
 						<div class="card-body position-relative">
 							<div class="row">
 								<div class="col-md-8">
@@ -26,7 +29,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small>tell us what's you are searc
 											<h5 class="text-white-transparent-8 mb-3">Make your search</h5>
 											<div class="text-white mt-n1 mb-1 ">
 												<div class="form-group">
-													<input type="text" class="form-control form-control-lg" id="tagsinput-default" data-role="tagsinput" />
+													<input type="text" name="main_search" class="form-control form-control-lg" id="tagsinput-default" data-role="tagsinput" />
 												</div>
 											</div>
 											<p class="mb-1 text-white-transparent-6 text-truncate">
@@ -41,12 +44,14 @@ Hi, {{ userprofile.user.username|capfirst }}.<small>tell us what's you are searc
 											</div>
 											<div class="mt-1">
 												<div>Add Filter</div>
-													<select  id="multiple" multiple>
+													<select  id="multiple" multiple name="filters">
 														  <option value="crime">Crime</option>
 														  <option value="child_abuse">Child Abuse</option>
 														  <option value="woman_abuse">Woman Abuse</option>
 														  <option value="pornography">Pornography</option>
 														</select>
+
+												<input type="hidden" id="multiple_select" name="multiple_select">
 												<!--<div class="font-weight-600 text-white">$1,629.80</div>-->
 											</div>
 										</div>
@@ -54,13 +59,15 @@ Hi, {{ userprofile.user.username|capfirst }}.<small>tell us what's you are searc
 									</div>
 									<!-- <hr class="hr-transparent bg-white-transparent-2 mt-3 mb-3" /> -->
 									<div class="mt-3 mb-2">
-<a href="#" class="btn btn-yellow btn-rounded btn-sm pl-5 pr-5 pt-2 pb-2 fs-14px font-weight-600"><i class="fa fa-wallet mr-2 ml-n2"></i> GO</a>
+<button type="submit" href="#" class="btn btn-yellow btn-rounded btn-sm pl-5 pr-5 pt-2 pb-2 fs-14px font-weight-600"><i class="fa fa-wallet mr-2 ml-n2"></i> GO</button>
 									</div>
 									<!--<p class="fs-12px">It usually takes 3-5 business days for transferring the earning to your bank account.</p>-->
 								</div>
 								<div class="col-md-4 d-none d-md-block" style="min-height: 380px;"></div>
 							</div>
 						</div>
+
+					</form>
 					</div>
 				</div>
 				<div class="col-xl-3">

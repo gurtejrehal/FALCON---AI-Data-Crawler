@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Notifications
 from django.contrib import messages
+from .crawler_spider import crawling, count_items
 
 
 
@@ -70,3 +71,36 @@ def read(request):
 
 
         return HttpResponse("0")
+
+
+
+
+@login_required
+def process(request):
+
+    if request.method == 'POST':
+
+        main_search = request.POST['main_search']
+        filters = request.POST['multiple_select']
+        print(type(main_search), type(filters))
+
+        # main_search_list = [ x.strip(' ') for x in main_search.split(',')]
+        filters_list = [x.strip(' ') for x in filters.split(',')]
+
+        result = crawling(main_search, filters_list)
+
+
+        count_list = count_items(result[0])[1]
+
+        print(result[1])
+
+
+        context = {
+            'labels': filters_list,
+            'data': count_list,
+            'results': result[1]
+        }
+
+        return render(request, 'crawler/result.html', context=context)
+
+
