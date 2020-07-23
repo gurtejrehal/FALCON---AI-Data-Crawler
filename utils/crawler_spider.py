@@ -50,7 +50,9 @@ def crawling(query, keywords):
 
 
 
-    return (context, reduced)
+
+
+    return (context, reduced, lists)
 
 
 def count_items(context):

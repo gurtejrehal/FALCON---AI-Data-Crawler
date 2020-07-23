@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Notifications
+from .models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
 from django.contrib import messages
 from utils.crawler_spider import crawling, count_items
 from utils.news import news
@@ -17,10 +17,15 @@ def index(request):
 
     unread = notifications.filter(read=False)
 
+
+    user_crawled_links = CrawledLinks.objects.order_by('-pub_date')[:5]
+
     context = dict()
     context['userprofile'] = userprofile
     context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
+    context['user_crawler'] = user_crawled_links
+
 
     return render(request, "crawler/index.html", context=context)
 
@@ -135,7 +140,33 @@ def process(request):
         # print(result1)
 
 
-        # print(count_list)
+        print(filters_list)
+
+
+
+        for keyword in main_search_list:
+            query = Keyword.objects.get_or_create(name=keyword)[0]
+            query.save()
+            pipeline_result = crawling(keyword, filters_list)[2]
+
+            for category, links in zip(filters_list, pipeline_result):
+
+                cat = Category.objects.get_or_create(name=category)[0]
+
+                for link in links:
+                    link = Link.objects.get_or_create(keyword=query, category=cat, link=link)[0]
+                    link.save()
+
+                    profile_update = CrawledLinks.objects.get_or_create(userprofile=userprofile, link=link)[0]
+                    profile_update.save()
+
+
+
+
+        no_of_links = len(CrawledLinks.objects.filter(userprofile=userprofile))
+
+        userprofile.crawled_links += no_of_links
+        userprofile.save()
 
         if len(main_search_list)>2:
             list1 = main_search_list[:2]

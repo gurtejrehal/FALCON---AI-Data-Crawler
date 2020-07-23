@@ -128,7 +128,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 <a href="#" data-toggle="dropdown" class="text-muted"><i class="fa fa-redo"></i></a>
 									</div>
 									<div class="mb-4">
-										<h3 class="mb-1">320,958</h3>
+										<h3 class="mb-1">{{ userprofile.crawled_links }}</h3>
 										<div class="text-success fs-13px font-weight-600">
 <i class="fa fa-caret-up"></i> +20.9%</div>
 									</div>
@@ -140,31 +140,14 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 										<div class="progress-bar bg-gray-200" style="width: 5.00%"></div>
 									</div>
 									<div class="fs-13px">
+										{% for crawler in user_crawler %}
 										<div class="d-flex align-items-center mb-2">
-											<div class="flex-grow-1 d-flex align-items-center">
-<i class="fa fa-circle fs-9px fa-fw text-primary mr-2"></i> link 1</div>
-											<div class="font-weight-600 text-dark">1 sec ago</div>
+											<div class="flex-grow-1 d-flex align-items-center" data-toggle="popover" data-content="{{ crawler.link.link }}" data-trigger="hover" data-placement="left">
+<i class="fa fa-circle fs-9px fa-fw text-primary mr-2"></i> {{ crawler.link.link|truncatechars:10 }}</div>
+											<div class="font-weight-600 text-dark">{{ crawler.whenpublished }}</div>
 										</div>
-										<div class="d-flex align-items-center mb-2">
-											<div class="flex-grow-1 d-flex align-items-center">
-<i class="fa fa-circle fs-9px fa-fw text-teal mr-2"></i> link 2</div>
-											<div class="font-weight-600 text-dark">2 sec ago</div>
-										</div>
-										<div class="d-flex align-items-center mb-2">
-											<div class="flex-grow-1 d-flex align-items-center">
-<i class="fa fa-circle fs-9px fa-fw text-warning mr-2"></i> link 3</div>
-											<div class="font-weight-600 text-dark">1 hour ago</div>
-										</div>
-										<div class="d-flex align-items-center mb-2">
-											<div class="flex-grow-1 d-flex align-items-center">
-<i class="fa fa-circle fs-9px fa-fw text-danger mr-2"></i> link 4</div>
-											<div class="font-weight-600 text-dark">18 hours ago</div>
-										</div>
-										<div class="d-flex align-items-center mb-15px">
-											<div class="flex-grow-1 d-flex align-items-center">
-<i class="fa fa-circle fs-9px fa-fw text-gray-200 mr-2"></i> link 5</div>
-											<div class="font-weight-600 text-dark">2 days ago</div>
-										</div>
+										{% endfor %}
+
 										<div class="fs-12px text-right">
 <div><a href="#" class="text-decoration-none">See all <i class="fa fa-chevron-right ml-2 "></i></a>
 									</div>

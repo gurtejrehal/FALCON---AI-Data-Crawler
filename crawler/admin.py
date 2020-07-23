@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Notifications
+from .models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
 
 admin.site.site_header = 'Falcon administration'
 
@@ -19,3 +19,9 @@ class NotificationsAdmin(admin.ModelAdmin):
 # admin.site.unregister(auth.models.User)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Notifications, NotificationsAdmin)
+
+
+admin.site.register(Keyword)
+admin.site.register(Category)
+admin.site.register(Link)
+admin.site.register(CrawledLinks)
