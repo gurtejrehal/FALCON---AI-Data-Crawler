@@ -344,7 +344,7 @@
             success: function(response){
             	$('#concurrent_update').html(response);
             	$('#concurrency').modal('hide');
-            	$('.toast').toast('show');
+            	$('#concurrent_toast').toast('show');
             	new_count = $('#new_count').val();
             	$('#unread-update').html(new_count);
                 console.log(response)

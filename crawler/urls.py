@@ -10,4 +10,5 @@ urlpatterns = [
     path('read/', views.read, name='read'),
     path('result/', views.process, name='process'),
     path('test/', views.test, name='test'),
+    path('falcon-api/<str:keyword>/', views.api, name='api')
 ]

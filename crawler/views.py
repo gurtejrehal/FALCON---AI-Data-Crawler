@@ -2,8 +2,10 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Notifications
 from django.contrib import messages
-from .crawler_spider import crawling, count_items
+from utils.crawler_spider import crawling, count_items
+from utils.news import news
 import random
+from django.http import JsonResponse
 
 
 
@@ -11,13 +13,13 @@ import random
 def index(request):
     userprofile = UserProfile.objects.get(user=request.user)
 
-    notifications = Notifications.objects.filter(user=userprofile)
+    notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
 
     unread = notifications.filter(read=False)
 
     context = dict()
     context['userprofile'] = userprofile
-    context['notifications'] = notifications[:5:-1]
+    context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
 
     return render(request, "crawler/index.html", context=context)
@@ -88,6 +90,19 @@ def read(request):
 
 
 
+def api(request, keyword):
+    result = news(keyword)
+
+    data = {
+        keyword: result
+    }
+    return JsonResponse(data)
+
+
+
+
+
+
 
 @login_required
 def process(request):
@@ -95,7 +110,7 @@ def process(request):
     if request.method == 'POST':
 
         userprofile = UserProfile.objects.get(user=request.user)
-        notifications = Notifications.objects.filter(user=userprofile)
+        notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
         unread = notifications.filter(read=False)
 
 
@@ -110,6 +125,8 @@ def process(request):
         result2 = dict()
         result3 = dict()
         result4 = dict()
+        news_data1 = dict()
+        news_data2 = dict()
         list1 = list()
         list2 = list()
         temp_list1 = list()
@@ -132,21 +149,27 @@ def process(request):
             result1[query] = crawling(query, filters_list)[0]
             result2[query] = crawling(query, filters_list)[1]
             temp_list1 = crawling(query, filters_list)[1]
+            news_data1[query] = news(query)
 
         for query in list2:
             result3[query] = crawling(query, filters_list)[0]
             result4[query] = crawling(query, filters_list)[1]
+            news_data2[query] = news(query)
 
         count_list1 = count_items(result1)
         count_list2 = count_items(result3)
 
         random.shuffle(colors)
 
-        print(count_list1)
+        print(news_data1)
+
+
+
+
 
         context = {
             'userprofile': userprofile,
-            'notifications': notifications[:5:-1],
+            'notifications': notifications[:5],
             'unread_count': len(unread),
             'labels': filters_list,
             'result1': result2,
@@ -156,7 +179,9 @@ def process(request):
             'count_list1': count_list1,
             'count_list2': count_list2,
             'temp_list1': temp_list1,
-            'random_colors': colors
+            'random_colors': colors,
+            'news_data1': news_data1,
+            'news_data2': news_data2
         }
 
         return render(request, 'crawler/result.html', context=context)

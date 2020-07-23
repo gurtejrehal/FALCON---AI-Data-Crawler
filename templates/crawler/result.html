@@ -80,10 +80,59 @@
 <div class="tab-content pt-3">
   {% for query in list1 %}
   <div class="tab-pane fade show {% if forloop.counter == 1 %}active{% endif %}" id="tab_{{ forloop.counter }}">
-    <div class="row"><button class="btn btn-dark btn-sm" id="generate_report">Generate Report</button></div>
-    <canvas id="chart-area_{{ forloop.counter }}"></canvas>
-    <div id="chartjs-tooltip_{{ forloop.counter }}">
-                <table></table>
+    <div class="row">
+        <div class="row">
+          <button class="btn btn-dark btn-sm mr-4" id="generate_report">Generate Report</button>
+          <button class="btn btn-dark btn-sm" >Keyword Analysis</button>
+        </div>
+        <canvas id="chart-area_{{ forloop.counter }}"></canvas>
+        <div id="chartjs-tooltip_{{ forloop.counter }}">
+                    <table></table>
+        </div>
+    </div>
+
+    <div class="row mt-4 mb-4 justify-content-md-center"><div class="col"><h2 class="text-center" style="font-family:'Montserrat'">SUMMARIZED DATA</h2></div></div>
+
+    <div class="row">
+
+      <div class="card-columns">
+
+        <div class="card bg-dark text-white text-center p-3">
+          <blockquote class="blockquote mb-0">
+            <a href="{% url 'crawler:api'  query  %}"  target="_blank" class="btn btn-info btn-sm font-weight-bold">API for this result.</a>
+            <footer class="blockquote-footer">
+              <small>
+                Results compiled for keyword: <cite title="Source Title"> {{ query }}</cite>
+              </small>
+            </footer>
+          </blockquote>
+        </div>
+
+
+
+        {% for keyword, values in news_data1.items %}
+
+        {% if query|stringformat:"s" == keyword|stringformat:"s" %}
+        {% for value in values %}
+        <div class="card p-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ value.title }} </h5>
+            <h6 class="card-subtitle mb-2 text-muted">for keyword {{ keyword }}</h6>
+            <p class="card-text">{{ value.desc }}</p>
+            <a href="{{ value.link }}" class="card-link">Link</a>
+            <p class="card-text">by {{ value.media }}</p>
+
+            <p class="card-text"><small class="text-muted">Last updated {{ value.date }}</small></p>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% endfor %}
+
+
+      </div>
+
     </div>
 
 
@@ -93,10 +142,20 @@
   {% if list2 %}
   {% for query in list2 %}
   <div class="tab-pane fade" id="dropdown_{{ forloop.counter }}">
-    <canvas id="chart-area_{{ forloop.counter|add:'2' }}"></canvas>
-    <div id="chartjs-tooltip_{{ forloop.counter|add:'2' }}">
-                <table></table>
+    <div class="row">
+        <div class="row">
+          <button class="btn btn-dark btn-sm mr-4" id="generate_report">Generate Report</button>
+          <button class="btn btn-dark btn-sm" >Keyword Analysis</button>
+        </div>
+        <canvas id="chart-area_{{ forloop.counter|add:'2' }}"></canvas>
+        <div id="chartjs-tooltip_{{ forloop.counter|add:'2' }}">
+                    <table></table>
+        </div>
     </div>
+
+    <div class="row mt-4 mb-4"><p class="text-center">News</p></div>
+
+
   </div>
   {% endfor %}
   {% endif %}
