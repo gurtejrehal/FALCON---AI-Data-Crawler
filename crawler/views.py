@@ -122,7 +122,7 @@ def process(request):
 
         if len(main_search_list)>2:
             list1 = main_search_list[:2]
-            list2 = main_search_list[3:]
+            list2 = main_search_list[2:]
 
         else:
             list1 = main_search_list
