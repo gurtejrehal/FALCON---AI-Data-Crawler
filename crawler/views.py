@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Notifications
 from django.contrib import messages
 from .crawler_spider import crawling, count_items
+import random
 
 
 
@@ -57,6 +58,19 @@ def update(request):
         return render(request, 'crawler/update.html', context=context)
 
 
+@login_required
+def update_notifications(request):
+
+    if request.method == 'POST':
+        userprofile = UserProfile.objects.get(user=request.user)
+        keyword = str(request.POST['keyword'])
+        content = f"Report is being generated for '{keyword}'"
+        notification = Notifications(user=userprofile, content=content)
+        notification.save()
+
+        return HttpResponse("1")
+
+
 
 @login_required
 def read(request):
@@ -80,6 +94,11 @@ def process(request):
 
     if request.method == 'POST':
 
+        userprofile = UserProfile.objects.get(user=request.user)
+        notifications = Notifications.objects.filter(user=userprofile)
+        unread = notifications.filter(read=False)
+
+
         main_search = request.POST['main_search']
         filters = request.POST['multiple_select']
         print(type(main_search), type(filters))
@@ -94,6 +113,7 @@ def process(request):
         list1 = list()
         list2 = list()
         temp_list1 = list()
+        colors = ['#111', '#f59042', '#555644', '#444']
 
         # print(result1)
 
@@ -120,10 +140,14 @@ def process(request):
         count_list1 = count_items(result1)
         count_list2 = count_items(result3)
 
+        random.shuffle(colors)
+
         print(count_list1)
 
-        print(temp_list1)
         context = {
+            'userprofile': userprofile,
+            'notifications': notifications[:5:-1],
+            'unread_count': len(unread),
             'labels': filters_list,
             'result1': result2,
             'result2': result4,
@@ -131,7 +155,8 @@ def process(request):
             'list2': list2,
             'count_list1': count_list1,
             'count_list2': count_list2,
-            'temp_list1': temp_list1
+            'temp_list1': temp_list1,
+            'random_colors': colors
         }
 
         return render(request, 'crawler/result.html', context=context)

@@ -261,6 +261,24 @@
 </div>
 
 
+<div class="toasts-container">
+	<div class="toast" data-autohide="false" id="report_toast">
+		{% csrf_token %}
+	  <div class="toast-header">
+		<i class="far fa-bell text-muted mr-2"></i>
+		<strong class="mr-auto">Generating Report</strong>
+		<small>1 sec ago</small>
+		<button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+		  <span>×</span>
+		</button>
+	  </div>
+	  <div class="toast-body">
+		Your Report is being generated.
+	  </div>
+	</div>
+</div>
+
+
 
 
 
@@ -350,6 +368,7 @@ $('#notification-read').click(function(){
         });
 
 });
+
 
 
 $(function() {

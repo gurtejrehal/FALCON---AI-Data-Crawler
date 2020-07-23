@@ -3,6 +3,7 @@ import re
 from bs4 import BeautifulSoup
 
 
+
 keywords = ["Crime",
             "Child Abuse",
             "Women Abuse",
@@ -67,3 +68,6 @@ def count_items(context):
 
 
     return list_count_dict
+
+
+
