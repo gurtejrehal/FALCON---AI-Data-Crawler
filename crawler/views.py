@@ -17,14 +17,14 @@ def index(request):
 
     unread = notifications.filter(read=False)
 
-    user_crawled_links = CrawledLinks.objects.order_by('-pub_date')
+    user_crawled_links = CrawledLinks.objects.filter(userprofile=userprofile).order_by('-pub_date')
 
     context = dict()
     context['userprofile'] = userprofile
     context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
     context['user_crawler'] = user_crawled_links[:5]
-    context['cat_percent'] = category_percent()
+    context['cat_percent'] = category_percent(request.user)
 
     return render(request, "crawler/index.html", context=context)
 
@@ -104,8 +104,9 @@ def process(request):
         notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
         unread = notifications.filter(read=False)
 
-        main_search = request.POST['main_search']
+        main_search = request.POST.get('main_search')
         filters = request.POST['multiple_select']
+        reschedule_crawler = request.POST.get('reschedule_crawler')
         print(type(main_search), type(filters))
 
         main_search_list = [x.strip(' ') for x in main_search.split(',')]
@@ -140,7 +141,8 @@ def process(request):
                     link = Link.objects.get_or_create(keyword=query, category=cat, link=link)[0]
                     link.save()
 
-                    profile_update, created = CrawledLinks.objects.get_or_create(userprofile=userprofile, link=link)
+                    profile_update, created = CrawledLinks.objects.get_or_create(userprofile=userprofile,
+                                                                                 link=link, reschedule=reschedule_crawler)
                     profile_update.save()
 
                     if created:

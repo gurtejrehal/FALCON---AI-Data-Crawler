@@ -52,14 +52,37 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 														</select>
 
 												<input type="hidden" id="multiple_select" name="multiple_select">
+
 												<!--<div class="font-weight-600 text-white">$1,629.80</div>-->
 											</div>
+
 										</div>
+
+
+									</div>
+
+									<div class="row justify-content-start">
+										<div class="col-2">
+											<div class="mt-1">
+<!--<i class="fa fa-fw fa-shopping-bag fs-28px text-black-transparent-5"></i>-->
+											</div>
+											<div class="mt-1">
+												<div>Reschedule</div>
+												<div class="form-group">
+													<input type="number" min="1" value="3" name="reschedule_crawler" class="form-control form-control-sm"  required/>
+												</div>
+
+
+												<!--<div class="font-weight-600 text-white">$1,629.80</div>-->
+											</div>
+
+										</div>
+
 
 									</div>
 									<!-- <hr class="hr-transparent bg-white-transparent-2 mt-3 mb-3" /> -->
-									<div class="mt-3 mb-2">
-<input type="submit" onclick="this.value='Loading...';this.disabled='disabled'; this.form.submit();" value="GO" class="btn btn-yellow btn-rounded btn-sm pl-5 pr-5 pt-2 pb-2 fs-14px font-weight-600"><i class="fa fa-quote-right ml-n4 text-dark"></i>
+									<div class="mb-2">
+										<button type="submit" id="submit_button" class="btn btn-yellow btn-rounded btn-sm pl-5 pr-5 pt-2 pb-2 fs-14px font-weight-600"><span class="spinner-border spinner-border-sm mr-2" style="display:none;" role="status" aria-hidden="true"></span>GO<i class="fa fa-quote-right ml-3 text-dark"></i></button>
 									</div>
 									<!--<p class="fs-12px">It usually takes 3-5 business days for transferring the earning to your bank account.</p>-->
 								</div>
@@ -140,8 +163,9 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 									<div class="fs-13px">
 										{% for crawler in user_crawler %}
 										<div class="d-flex align-items-center mb-2">
-											<div class="flex-grow-1 d-flex align-items-center" data-toggle="popover" data-content="{{ crawler.link.link }}" data-trigger="hover" data-placement="left">
-<i class="fa fa-circle fs-9px fa-fw text-{% if crawler.link.category.name|stringformat:'s' == 'crime' %}primary{% elif crawler.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif crawler.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %} mr-2"></i> {{ crawler.link.link|truncatechars:10 }}</div>
+											<div class="flex-grow-1 d-flex align-items-center" >
+<i class="fa fa-circle fs-9px fa-fw text-{% if crawler.link.category.name|stringformat:'s' == 'crime' %}primary{% elif crawler.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif crawler.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %} mr-2" data-toggle="popover" data-content="{{ crawler.link.category.name }}" data-trigger="hover" data-placement="left"></i>
+												<span data-toggle="popover" data-content="{{ crawler.link.link }}" data-trigger="hover" data-placement="left">{{ crawler.link.link|truncatechars:10 }} </span></div>
 											<div class="font-weight-600 text-dark">{{ crawler.whenpublished }}</div>
 										</div>
 										{% endfor %}

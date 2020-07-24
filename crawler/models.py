@@ -52,7 +52,10 @@ class UserProfile(models.Model):
 
         now = timezone.now()
         diff = now - self.user.date_joined
-        return int(diff.total_seconds()/3600)
+        minutes = diff.total_seconds()/3600
+
+
+        return round(minutes, 1)
 
     def percent(self):
 
@@ -67,6 +70,7 @@ class CrawledLinks(models.Model):
 
     userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     link = models.ForeignKey(Link, on_delete=models.CASCADE)
+    reschedule = models.IntegerField(default=3)
     pub_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

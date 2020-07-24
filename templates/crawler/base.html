@@ -379,6 +379,12 @@ $(function() {
     });
 
 $('[data-toggle="popover"]').popover();
+
+$('#main_search').submit(function(){
+	$('#submit_button').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...')
+
+});
+
 });
 
 

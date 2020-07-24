@@ -1,15 +1,17 @@
-from crawler.models import Link, Category
+from crawler.models import Link, Category, UserProfile, CrawledLinks
 
 
-def category_count():
+def category_count(user):
 
     temp = list()
 
     categories = Category.objects.all()
+    userprofile = UserProfile.objects.get(user=user)
 
     for category in categories:
 
-        links = len(Link.objects.filter(category__name=category.name))
+        links = len(CrawledLinks.objects.filter(userprofile=userprofile, link__category__name=category.name))
+
 
         temp.append(links)
 
@@ -17,15 +19,16 @@ def category_count():
     return temp
 
 
-def category_percent():
+def category_percent(user):
 
-    temp = category_count()
+    temp = category_count(user)
     total = sum(temp)
     percent = list()
     context = dict()
 
     for item in temp:
-        percent.append(( item/total ) * 100)
+        if total != 0:
+            percent.append(( item/total ) * 100)
 
     categories = Category.objects.all()
 
