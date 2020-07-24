@@ -68,7 +68,6 @@ def count_items(context):
         list_count_dict[key] = temp
         temp = []
 
-
     return list_count_dict
 
 

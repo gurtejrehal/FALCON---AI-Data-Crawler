@@ -44,7 +44,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 											</div>
 											<div class="mt-1">
 												<div>Add Filter</div>
-													<select  id="multiple" multiple name="filters">
+													<select  id="multiple" multiple name="filters" required>
 														  <option value="crime">Crime</option>
 														  <option value="child_abuse">Child Abuse</option>
 														  <option value="woman_abuse">Woman Abuse</option>
@@ -125,7 +125,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 											<h5 class="mb-1">Crawler</h5>
 											<div class="fs-13px">Traffic </div>
 										</div>
-<a href="#" data-toggle="dropdown" class="text-muted"><i class="fa fa-redo"></i></a>
+<a href="#" data-toggle="dropdown" class="text-muted" id="refresh_crawler"><i class="fa fa-redo"></i></a>
 									</div>
 									<div class="mb-4">
 										<h3 class="mb-1">{{ userprofile.crawled_links }}</h3>
@@ -143,7 +143,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 										{% for crawler in user_crawler %}
 										<div class="d-flex align-items-center mb-2">
 											<div class="flex-grow-1 d-flex align-items-center" data-toggle="popover" data-content="{{ crawler.link.link }}" data-trigger="hover" data-placement="left">
-<i class="fa fa-circle fs-9px fa-fw text-primary mr-2"></i> {{ crawler.link.link|truncatechars:10 }}</div>
+<i class="fa fa-circle fs-9px fa-fw text-{% if crawler.link.category.name|stringformat:'s' == 'crime' %}primary{% elif crawler.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif crawler.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %} mr-2"></i> {{ crawler.link.link|truncatechars:10 }}</div>
 											<div class="font-weight-600 text-dark">{{ crawler.whenpublished }}</div>
 										</div>
 										{% endfor %}

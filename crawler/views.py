@@ -8,7 +8,6 @@ import random
 from django.http import JsonResponse
 
 
-
 @login_required
 def index(request):
     userprofile = UserProfile.objects.get(user=request.user)
@@ -17,15 +16,13 @@ def index(request):
 
     unread = notifications.filter(read=False)
 
-
-    user_crawled_links = CrawledLinks.objects.order_by('-pub_date')[:5]
+    user_crawled_links = CrawledLinks.objects.order_by('-pub_date')
 
     context = dict()
     context['userprofile'] = userprofile
     context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
-    context['user_crawler'] = user_crawled_links
-
+    context['user_crawler'] = user_crawled_links[:5]
 
     return render(request, "crawler/index.html", context=context)
 
@@ -37,9 +34,9 @@ def test(request):
     context['userprofile'] = userprofile
     return render(request, "crawler/result.html", context=context)
 
+
 @login_required
 def update(request):
-
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
         query = str(request.POST['query'])
@@ -60,14 +57,11 @@ def update(request):
             'new_count': len(new_notification)
         }
 
-
-
         return render(request, 'crawler/update.html', context=context)
 
 
 @login_required
 def update_notifications(request):
-
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
         keyword = str(request.POST['keyword'])
@@ -78,10 +72,8 @@ def update_notifications(request):
         return HttpResponse("1")
 
 
-
 @login_required
 def read(request):
-
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
         notifications = Notifications.objects.filter(user=userprofile)
@@ -90,9 +82,7 @@ def read(request):
             notification.read = True
             notification.save()
 
-
         return HttpResponse("0")
-
 
 
 def api(request, keyword):
@@ -104,26 +94,19 @@ def api(request, keyword):
     return JsonResponse(data)
 
 
-
-
-
-
-
 @login_required
 def process(request):
-
     if request.method == 'POST':
 
         userprofile = UserProfile.objects.get(user=request.user)
         notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
         unread = notifications.filter(read=False)
 
-
         main_search = request.POST['main_search']
         filters = request.POST['multiple_select']
         print(type(main_search), type(filters))
 
-        main_search_list = [ x.strip(' ') for x in main_search.split(',')]
+        main_search_list = [x.strip(' ') for x in main_search.split(',')]
         filters_list = [x.strip(' ') for x in filters.split(',')]
 
         result1 = dict()
@@ -135,14 +118,12 @@ def process(request):
         list1 = list()
         list2 = list()
         temp_list1 = list()
+        no_of_links = 0
         colors = ['#111', '#f59042', '#555644', '#444']
 
         # print(result1)
 
-
         print(filters_list)
-
-
 
         for keyword in main_search_list:
             query = Keyword.objects.get_or_create(name=keyword)[0]
@@ -157,34 +138,31 @@ def process(request):
                     link = Link.objects.get_or_create(keyword=query, category=cat, link=link)[0]
                     link.save()
 
-                    profile_update = CrawledLinks.objects.get_or_create(userprofile=userprofile, link=link)[0]
+                    profile_update, created = CrawledLinks.objects.get_or_create(userprofile=userprofile, link=link)
                     profile_update.save()
 
-
-
-
-        no_of_links = len(CrawledLinks.objects.filter(userprofile=userprofile))
+                    if created:
+                        no_of_links += 1
 
         userprofile.crawled_links += no_of_links
         userprofile.save()
 
-        if len(main_search_list)>2:
+        if len(main_search_list) > 2:
             list1 = main_search_list[:2]
             list2 = main_search_list[2:]
 
         else:
             list1 = main_search_list
 
-
         for query in list1:
             result1[query] = crawling(query, filters_list)[0]
-            result2[query] = crawling(query, filters_list)[1]
+            # result2[query] = crawling(query, filters_list)[1]
             temp_list1 = crawling(query, filters_list)[1]
             news_data1[query] = news(query)
 
         for query in list2:
             result3[query] = crawling(query, filters_list)[0]
-            result4[query] = crawling(query, filters_list)[1]
+            # result4[query] = crawling(query, filters_list)[1]
             news_data2[query] = news(query)
 
         count_list1 = count_items(result1)
@@ -194,17 +172,13 @@ def process(request):
 
         print(news_data1)
 
-
-
-
-
         context = {
             'userprofile': userprofile,
             'notifications': notifications[:5],
             'unread_count': len(unread),
             'labels': filters_list,
-            'result1': result2,
-            'result2': result4,
+            # 'result1': result2,
+            # 'result2': result4,
             'list1': list1,
             'list2': list2,
             'count_list1': count_list1,
@@ -216,5 +190,3 @@ def process(request):
         }
 
         return render(request, 'crawler/result.html', context=context)
-
-
