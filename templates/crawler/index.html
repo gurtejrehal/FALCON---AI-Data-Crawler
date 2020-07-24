@@ -59,7 +59,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 									</div>
 									<!-- <hr class="hr-transparent bg-white-transparent-2 mt-3 mb-3" /> -->
 									<div class="mt-3 mb-2">
-<button type="submit" href="#" class="btn btn-yellow btn-rounded btn-sm pl-5 pr-5 pt-2 pb-2 fs-14px font-weight-600"><i class="fa fa-wallet mr-2 ml-n2"></i> GO</button>
+<input type="submit" onclick="this.value='Loading...';this.disabled='disabled'; this.form.submit();" value="GO" class="btn btn-yellow btn-rounded btn-sm pl-5 pr-5 pt-2 pb-2 fs-14px font-weight-600"><i class="fa fa-quote-right ml-n4 text-dark"></i>
 									</div>
 									<!--<p class="fs-12px">It usually takes 3-5 business days for transferring the earning to your bank account.</p>-->
 								</div>
@@ -133,11 +133,9 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 <i class="fa fa-caret-up"></i> +20.9%</div>
 									</div>
 									<div class="progress mb-4" style="height: 10px;">
-										<div class="progress-bar" style="width: 42.66%"></div>
-										<div class="progress-bar bg-teal" style="width: 36.80%"></div>
-										<div class="progress-bar bg-yellow" style="width: 15.34%"></div>
-										<div class="progress-bar bg-pink" style="width: 9.20%"></div>
-										<div class="progress-bar bg-gray-200" style="width: 5.00%"></div>
+										{% for key, item in cat_percent.items %}
+										<div class="progress-bar bg-{% if key|stringformat:'s' == 'crime' %}primary{% elif key|stringformat:'s' == 'child_abuse' %}danger{% elif key|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %}" style="width: {{ item }}%" data-toggle="popover" data-content="{{ key }} has {{ item }}% of link" data-trigger="hover" data-placement="top"></div>
+										{% endfor %}
 									</div>
 									<div class="fs-13px">
 										{% for crawler in user_crawler %}

@@ -4,6 +4,7 @@ from .models import UserProfile, Notifications, Keyword, Category, Link, Crawled
 from django.contrib import messages
 from utils.crawler_spider import crawling, count_items
 from utils.news import news
+from utils.analytics import category_percent
 import random
 from django.http import JsonResponse
 
@@ -23,6 +24,7 @@ def index(request):
     context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
     context['user_crawler'] = user_crawled_links[:5]
+    context['cat_percent'] = category_percent()
 
     return render(request, "crawler/index.html", context=context)
 
