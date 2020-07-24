@@ -4,9 +4,10 @@ from .models import UserProfile, Notifications, Keyword, Category, Link, Crawled
 from django.contrib import messages
 from utils.crawler_spider import crawling, count_items
 from utils.news import news
-from utils.analytics import category_percent
+from utils.analytics import category_percent, category_count
 import random
 from django.http import JsonResponse
+from django.db.models import Count
 
 
 @login_required
@@ -20,6 +21,7 @@ def index(request):
     user_crawled_links = CrawledLinks.objects.filter(userprofile=userprofile).order_by('-pub_date')
 
     context = dict()
+    context['home'] = True
     context['userprofile'] = userprofile
     context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
@@ -27,6 +29,33 @@ def index(request):
     context['cat_percent'] = category_percent(request.user)
 
     return render(request, "crawler/index.html", context=context)
+
+
+
+
+@login_required
+def crawler_index(request):
+
+    context = dict()
+    userprofile = UserProfile.objects.get(user=request.user)
+    notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
+    unread = notifications.filter(read=False)
+    categories = [ i.name for i in Category.objects.all()]
+    crawled_links = CrawledLinks.objects.order_by('-pub_date')
+
+    unique_keyword = list(crawled_links.filter(userprofile=userprofile).order_by().values_list('link__keyword__name', flat=True).distinct())
+
+    # print(categories)
+    context['crawler_home'] = True
+    context['userprofile'] = userprofile
+    context['notifications'] = notifications[:5]
+    context['unread_count'] = len(unread)
+    context['crawled_links'] = crawled_links
+    context['categories'] = categories
+    context['category_data'] = category_count(request.user)
+    context['unique_keyword'] = unique_keyword
+
+    return render(request, "crawler/crawler.html", context=context)
 
 
 @login_required
@@ -177,6 +206,7 @@ def process(request):
         print(news_data1)
 
         context = {
+            'home': True,
             'userprofile': userprofile,
             'notifications': notifications[:5],
             'unread_count': len(unread),

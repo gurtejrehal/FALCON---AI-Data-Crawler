@@ -16,10 +16,33 @@
 	<link href="{% static 'css/app.min.css' %}" rel="stylesheet" />
 	<link href="{% static 'plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}" rel="stylesheet" />
 
+	<style>
+			/*
+ *  STYLE 4
+ */
+
+#style-4::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#style-4::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+#style-4::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+}
+	</style>
+
 	{% block custom_style %}{% endblock %}
 </head>
 
-<body>
+<body id="style-4">
 	<div id="app" class="app">
 		<header id="header" class="app-header">
 			<div class="mobile-toggler">
@@ -99,13 +122,13 @@
 			<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
 				<div class="menu">
 					<div class="menu-header">Navigation</div>
-					<div class="menu-item active">
-						<a href="index-2.html" class="menu-link">
+					<div class="menu-item {% if home %}active{% endif %}">
+						<a href="{% url 'crawler:index' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-laptop"></i></span>
 							<span class="menu-text">{% if request.path == '/result/' %}Result{% else %}Dashboard{% endif %}</span>
 						</a>
 					</div>
-					<div class="menu-item">
+					<div class="menu-item ">
 						<a href="analytics.html" class="menu-link">
 <span class="menu-icon"><i class="fa fa-chart-pie"></i></span>
 							<span class="menu-text">Analytics</span>
@@ -113,8 +136,8 @@
 					</div>
 					<div class="menu-divider"></div>
 					<div class="menu-header">Components</div>
-					<div class="menu-item">
-						<a href="widgets.html" class="menu-link">
+					<div class="menu-item {% if crawler_home %}active{% endif %}">
+						<a href="{% url 'crawler:crawler_index' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-snowflake"></i></span>
 							<span class="menu-text">Crawler</span>
 						</a>
@@ -238,6 +261,28 @@
 </div>
 	{% endfor %}
 {% endfor %}
+
+	{% for link in crawled_links %}
+		<div class="modal fade" id="modal_link_{{ forloop.counter }}">
+			  <div class="modal-dialog modal-lg modal-dialog-centered">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title">Link - <a href="{{ link.link.link }}">{{ link.link.link }}</a></h5>
+					<button type="button" class="close" data-dismiss="modal">
+					  <span>×</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<p>scraped data hereee</p>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-{% if link.link.category.name|stringformat:'s' == 'crime' %}primary{% elif link.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif link.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %}" data-dismiss="modal">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+
+	{% endfor %}
 
 
 <div class="modal modal-cover fade" id="details">

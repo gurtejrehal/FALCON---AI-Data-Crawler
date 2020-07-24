@@ -1,0 +1,208 @@
+{% extends 'crawler/base.html' %}
+{% load static %}
+
+{% block title %} Crawler {% endblock %}
+
+
+{% block custom_style %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link href="{% static 'plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" />
+
+<style>
+	/*
+ *  STYLE 3
+ */
+
+#style-3::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+}
+
+#style-3::-webkit-scrollbar
+{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+#style-3::-webkit-scrollbar-thumb
+{
+	background-color: #000000;
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block body %}
+
+<ul class="breadcrumb">
+<li class="breadcrumb-item"><a href="{% url 'crawler:index' %}">FALCON</a></li>
+<li class="breadcrumb-item active">CRAWLER</li>
+</ul>
+
+
+<div class="container">
+
+    <div id="datatable" class="mb-5">
+	<h4 style="font-family:'Montserrat'">CRAWLER</h4>
+		<div class="row mb-4">
+			<div class="col-md-3">
+				<div class="card bg-light  mt-4 p-3">
+					<div class="card-body">
+						<h5 class="card-title" style="font-family:'Montserrat'">{{ userprofile.user.username|title }},</h5>
+						<p class="card-text">you have crawled <span class="text-primary" style="font-family:'Montserrat'">{{ userprofile.crawled_links }}</span> links till now.</p>
+						<p class="card-text"><small class="text-muted">with <span class="text-primary" style="font-family:'Montserrat'">{{ userprofile.time_spent_scraping }}</span> hours spent scraping.</small></p>
+					  </div>
+				  </div>
+			</div>
+
+				<canvas id="barChart" class="col-md-6" height="300"></canvas>
+
+			<div class="col-md-3">
+				<div class="card bg-secondary  mt-4 p-3">
+					<div class="card-body" id="style-3" style="overflow-y:scroll; height:150px;">
+						<h5 class="card-title text-white" style="font-family:'Montserrat'" > API's </h5>
+						<hr>
+						{% if unique_keyword %}
+						{% for keyword in unique_keyword %}
+						<p class="card-text"><a href="{% url 'crawler:api' keyword %}"  target="_blank" class="btn btn-dark btn-sm">{{ keyword }}</a></p>
+						{% endfor %}
+						{% else %}
+						<p class="card-text">Crawl links get API's</p>
+						{% endif %}
+					  </div>
+				  </div>
+			</div>
+
+
+		</div>
+
+	<div class="card">
+		<div class="card-body">
+			<table id="datatableDefault" class="table table-sm table-borderless text-nowrap w-100">
+				<thead class="thead-dark">
+					<tr>
+						<th>#</th>
+						<th>Author</th>
+						<th>Links</th>
+						<th>Category</th>
+						<th>Keyword</th>
+						<th>Time</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% for link in crawled_links %}
+					<tr>
+						<td>{{ forloop.counter }}</td>
+						<td>{{ link.userprofile.user.username }}</td>
+						<td data-toggle="popover" data-content="{{ link.link.link }}" data-trigger="hover" data-placement="left">
+							<a href="#" data-toggle="modal" data-target="#modal_link_{{ forloop.counter }}">
+								{{ link.link.link|truncatechars:30 }}
+							</a>
+						</td>
+						<td>
+							<i class="fa fa-circle fs-9px fa-fw text-{% if link.link.category.name|stringformat:'s' == 'crime' %}primary{% elif link.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif link.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %} mr-2" data-toggle="popover" data-content="{{ link.link.category.name }}" data-trigger="hover" data-placement="left"></i>
+							{{ link.link.category.name }}
+						</td>
+						<td>{{ link.link.keyword.name }}</td>
+						<td data-toggle="popover" data-content="{{ link.pub_date }}" data-trigger="hover" data-placement="left"> {{ link.whenpublished }}</td>
+					</tr>
+				{% endfor %}
+
+				</tbody>
+			</table>
+		</div>
+
+
+
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+<script
+	  src="https://code.jquery.com/jquery-3.3.1.min.js"
+	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="{% static 'js/app.min.js' %}" type="59f984106ec2e39727363fa8-text/javascript"></script>
+<script src="{% static 'plugins/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/chart.js/dist/Chart.min.js' %}" ></script>
+
+<script>
+
+
+  $(function() {
+
+    $('#datatableDefault').DataTable({
+    dom: "<'row mb-3'<'col-sm-4'l><'col-sm-8 text-right'<'d-flex justify-content-end'fB>>>t<'d-flex align-items-center'<'mr-auto'i><'mb-0'p>>",
+    lengthMenu: [ 20, 30, 40, 50, 60 ],
+    responsive: true,
+    buttons: [
+      { extend: 'print', className: 'btn btn-default' },
+      { extend: 'csv', className: 'btn btn-default' }
+    ]
+  });
+
+
+$('[data-toggle="popover"]').popover();
+
+
+
+});
+
+</script>
+
+<script>
+
+var ctx = document.getElementById('barChart');
+
+var barChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: {{ categories|safe }},
+    datasets: [{
+      label: '# of Links Crawled in each category',
+      data: {{ category_data| safe }},
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)',
+        'rgba(153, 102, 255, 1)',
+
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+
+  }
+});
+</script>
+
+{% endblock %}
