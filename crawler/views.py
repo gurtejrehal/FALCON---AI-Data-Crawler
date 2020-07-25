@@ -13,7 +13,7 @@ from django.db.models import Count
 @login_required
 def index(request):
     userprofile = UserProfile.objects.get(user=request.user)
-
+    category = Category.objects.all()
     notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
 
     unread = notifications.filter(read=False)
@@ -22,6 +22,7 @@ def index(request):
 
     context = dict()
     context['home'] = True
+    context['category'] = category
     context['userprofile'] = userprofile
     context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
@@ -45,7 +46,7 @@ def crawler_index(request):
 
     unique_keyword = list(crawled_links.filter(userprofile=userprofile).order_by().values_list('link__keyword__name', flat=True).distinct())
 
-    # print(categories)
+    print(category_count(request.user))
     context['crawler_home'] = True
     context['userprofile'] = userprofile
     context['notifications'] = notifications[:5]

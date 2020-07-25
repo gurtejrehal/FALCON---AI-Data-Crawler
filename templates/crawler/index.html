@@ -1,5 +1,7 @@
 {% extends 'crawler/base.html' %}
+{% load crawlerapp_filter %}
 {% load static %}
+
 {% block body %}
 
 			<h1 class="page-header mb-3">
@@ -45,10 +47,12 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 											<div class="mt-1">
 												<div>Add Filter</div>
 													<select  id="multiple" multiple name="filters" required>
-														  <option value="crime">Crime</option>
-														  <option value="child_abuse">Child Abuse</option>
-														  <option value="woman_abuse">Woman Abuse</option>
-														  <option value="pornography">Pornography</option>
+															{% for cat in category %}
+														  <option value="{{ cat.name }}">{{ cat.name|change_string }}</option>
+															{% endfor %}
+<!--														  <option value="child_abuse">Child Abuse</option>-->
+<!--														  <option value="woman_abuse">Woman Abuse</option>-->
+<!--														  <option value="pornography">Pornography</option>-->
 														</select>
 
 												<input type="hidden" id="multiple_select" name="multiple_select">

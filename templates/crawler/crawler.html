@@ -32,6 +32,10 @@
 	background-color: #000000;
 }
 
+.shadow{
+	box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+	}
+
 </style>
 
 {% endblock %}
@@ -50,11 +54,15 @@
     <div id="datatable" class="mb-5">
 	<h4 style="font-family:'Montserrat'">CRAWLER</h4>
 		<div class="row mb-4">
-			<div class="col-md-3">
-				<div class="card bg-light  mt-4 p-3">
+			<div class="col-md-3 ">
+				<div class="card bg-light shadow  mt-4 p-3">
 					<div class="card-body">
 						<h5 class="card-title" style="font-family:'Montserrat'">{{ userprofile.user.username|title }},</h5>
+						{% if userprofile.crawled_links %}
 						<p class="card-text">you have crawled <span class="text-primary" style="font-family:'Montserrat'">{{ userprofile.crawled_links }}</span> links till now.</p>
+						{% else %}
+						<p class="card-text">you haven't <span class="text-primary" style="font-family:'Montserrat'">crawled </span> any links yet.</p>
+						{% endif %}
 						<p class="card-text"><small class="text-muted">with <span class="text-primary" style="font-family:'Montserrat'">{{ userprofile.time_spent_scraping }}</span> hours spent scraping.</small></p>
 					  </div>
 				  </div>
@@ -63,7 +71,7 @@
 				<canvas id="barChart" class="col-md-6" height="300"></canvas>
 
 			<div class="col-md-3">
-				<div class="card bg-secondary  mt-4 p-3">
+				<div class="card bg-secondary  mt-4 p-3 border-0 shadow">
 					<div class="card-body" id="style-3" style="overflow-y:scroll; height:150px;">
 						<h5 class="card-title text-white" style="font-family:'Montserrat'" > API's </h5>
 						<hr>
@@ -81,7 +89,7 @@
 
 		</div>
 
-	<div class="card">
+	<div class="card border-0 shadow">
 		<div class="card-body">
 			<table id="datatableDefault" class="table table-sm table-borderless text-nowrap w-100">
 				<thead class="thead-dark">
@@ -177,7 +185,7 @@ var barChart = new Chart(ctx, {
   data: {
     labels: {{ categories|safe }},
     datasets: [{
-      label: '# of Links Crawled in each category',
+      label: '# of Links Crawled in each Category',
       data: {{ category_data| safe }},
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',
