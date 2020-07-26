@@ -1,0 +1,19 @@
+<h6 class="dropdown-header text-gray-900 mb-1">Notifications</h6>
+						{% for notification in notifications %}
+						<a href="#" class="dropdown-notification-item">
+							<div class="dropdown-notification-icon">
+<i class="fa fa-receipt fa-lg fa-fw text-success"></i>
+							</div>
+							<div class="dropdown-notification-info">
+								<div class="title">{{ notification.content }}</div>
+								<div class="time">{{ notification.whenpublished }}</div>
+							</div>
+							<div class="dropdown-notification-arrow">
+<i class="fa fa-chevron-right"></i>
+							</div>
+						</a>
+						{% endfor %}
+
+						<div class="p-2 text-center mb-n1">
+<a href="#" class="text-gray-800 text-decoration-none">See all</a>
+						</div>

@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
 from django.contrib import messages
-from utils.crawler_spider import crawling, count_items
+from utils.crawler_spider import crawling, count_items, wiki_data
 from utils.news import news
 from utils.analytics import category_percent, category_count
 import random
@@ -105,6 +105,19 @@ def update_notifications(request):
 
 
 @login_required
+def update_notifications_base(request):
+    if request.method == 'POST':
+        userprofile = UserProfile.objects.get(user=request.user)
+        notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
+
+        context = {
+            'notifications': notifications[:5]
+        }
+
+        return render(None, "crawler/update_notifications.html", context=context)
+
+
+@login_required
 def read(request):
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
@@ -151,6 +164,7 @@ def process(request):
         list1 = list()
         list2 = list()
         temp_list1 = list()
+        wiki_links = []
         no_of_links = 0
         colors = ['#111', '#f59042', '#555644', '#444']
 
@@ -168,6 +182,10 @@ def process(request):
                 cat = Category.objects.get_or_create(name=category)[0]
 
                 for link in links:
+
+                    if "wikipedia" in link:
+                        wiki_links.append(link)
+
                     link = Link.objects.get_or_create(keyword=query, category=cat, link=link)[0]
                     link.save()
 
@@ -203,8 +221,10 @@ def process(request):
         count_list2 = count_items(result3)
 
         random.shuffle(colors)
+        print(list(set(wiki_links)))
 
-        print(news_data1)
+        wikis = wiki_data(list(set(wiki_links)))
+        print(wikis)
 
         context = {
             'home': True,
@@ -221,7 +241,8 @@ def process(request):
             'temp_list1': temp_list1,
             'random_colors': colors,
             'news_data1': news_data1,
-            'news_data2': news_data2
+            'news_data2': news_data2,
+            'wikis': wikis
         }
 
         return render(request, 'crawler/result.html', context=context)

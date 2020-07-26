@@ -79,26 +79,8 @@
 						{% csrf_token %}
 						<div class="menu-label" id="unread-update">{{ unread_count }}</div>
 					</a>
-					<div class="dropdown-menu dropdown-menu-right dropdown-notification">
-						<h6 class="dropdown-header text-gray-900 mb-1">Notifications</h6>
-						{% for notification in notifications %}
-						<a href="#" class="dropdown-notification-item">
-							<div class="dropdown-notification-icon">
-<i class="fa fa-receipt fa-lg fa-fw text-success"></i>
-							</div>
-							<div class="dropdown-notification-info">
-								<div class="title">{{ notification.content }}</div>
-								<div class="time">{{ notification.whenpublished }}</div>
-							</div>
-							<div class="dropdown-notification-arrow">
-<i class="fa fa-chevron-right"></i>
-							</div>
-						</a>
-						{% endfor %}
+					<div class="dropdown-menu dropdown-menu-right dropdown-notification" id="notification_area">
 
-						<div class="p-2 text-center mb-n1">
-<a href="#" class="text-gray-800 text-decoration-none">See all</a>
-						</div>
 					</div>
 				</div>
 				<div class="menu-item dropdown">
@@ -410,6 +392,16 @@ $('#notification-read').click(function(){
             data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
             success: function(response){
 					$('#unread-update').html(response);
+            }
+
+        });
+
+        $.ajax({
+            url: "/update-notifications-base/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#notification_area').html(response);
             }
 
         });

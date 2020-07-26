@@ -71,4 +71,43 @@ def count_items(context):
     return list_count_dict
 
 
+def wiki_data(lists):
+    context = dict()
+
+    temp = list()
+
+    for i in lists:
+        temp.append(i.split('%')[0])
+
+
+    for link in temp:
+        page = requests.get(str(link))
+        infobox = dict()
+        if page.status_code is 200:
+            soup = BeautifulSoup(page.content, 'html.parser')
+            try:
+                table = soup.select(".infobox")[0]
+            except:
+                print(f"no table in {link}")
+                continue
+            rows = table.find_all('tr')
+            flag = 1
+            i = 0
+            length = len(rows)
+            for i in range(length):
+                try:
+                    if (i == 0):
+                        infobox['name'] = str(rows[i].th.text)
+                        flag = 0
+                    else:
+                        infobox[str(rows[i].th.text)] = (str(rows[i].td.text))
+                except:
+                    pass
+        else:
+            print("Cant reach to servers")
+        context[str(link)] = infobox
+        # print(infobox)
+    return context
+
+
 

@@ -161,14 +161,14 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 									</div>
 									<div class="progress mb-4" style="height: 10px;">
 										{% for key, item in cat_percent.items %}
-										<div class="progress-bar bg-{% if key|stringformat:'s' == 'crime' %}primary{% elif key|stringformat:'s' == 'child_abuse' %}danger{% elif key|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %}" style="width: {{ item }}%" data-toggle="popover" data-content="{{ key }} has {{ item }}% of link" data-trigger="hover" data-placement="top"></div>
+										<div class="progress-bar bg-{% if key|stringformat:'s' == 'crime' %}primary{% elif key|stringformat:'s' == 'child_abuse' %}danger{% elif key|stringformat:'s' == 'woman_abuse' %}warning{% elif key|stringformat:'s' == 'rape' %}secondary{% else %}teal{% endif %}" style="width: {{ item }}%" data-toggle="popover" data-content="{{ key }} has {{ item }}% of link" data-trigger="hover" data-placement="top"></div>
 										{% endfor %}
 									</div>
 									<div class="fs-13px">
 										{% for crawler in user_crawler %}
 										<div class="d-flex align-items-center mb-2">
 											<div class="flex-grow-1 d-flex align-items-center" >
-<i class="fa fa-circle fs-9px fa-fw text-{% if crawler.link.category.name|stringformat:'s' == 'crime' %}primary{% elif crawler.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif crawler.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %} mr-2" data-toggle="popover" data-content="{{ crawler.link.category.name }}" data-trigger="hover" data-placement="left"></i>
+<i class="fa fa-circle fs-9px fa-fw text-{% if crawler.link.category.name|stringformat:'s' == 'crime' %}primary{% elif crawler.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif crawler.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% elif crawler.link.category.name|stringformat:'s' == 'rape' %}secondary{% else %}teal{% endif %} mr-2" data-toggle="popover" data-content="{{ crawler.link.category.name }}" data-trigger="hover" data-placement="left"></i>
 												<span data-toggle="popover" data-content="{{ crawler.link.link }}" data-trigger="hover" data-placement="left">{{ crawler.link.link|truncatechars:10 }} </span></div>
 											<div class="font-weight-600 text-dark">{{ crawler.whenpublished }}</div>
 										</div>

@@ -213,4 +213,29 @@ var barChart = new Chart(ctx, {
 });
 </script>
 
+		<script>
+			$('#notification-read').click(function(){
+	$.ajax({
+            url: "/read/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#unread-update').html(response);
+            }
+
+        });
+
+        $.ajax({
+            url: "/update-notifications-base/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#notification_area').html(response);
+            }
+
+        });
+
+});
+		</script>
+
 {% endblock %}

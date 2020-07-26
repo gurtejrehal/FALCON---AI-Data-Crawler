@@ -54,7 +54,6 @@
 </ul>
 
 
-
 <div class="container">
 
   <ul class="nav nav-tabs">
@@ -90,6 +89,37 @@
                     <table></table>
         </div>
     </div>
+
+
+
+      <div class="card-columns mt-4 mb-4 mr-4">
+
+        {% for keys, values in wikis.items %}
+        <div class="card p-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ keys }} </h5>
+
+            <table class="table table-sm ">
+
+                <tbody>
+                {% for key, value in values.items %}
+                  <tr>
+                    <th scope="row">{{ key }}</th>
+                    <td>{{ value }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+          </div>
+        </div>
+        {% endfor %}
+
+
+      </div>
+
+
+
 
     <div class="row mt-4 mb-4 justify-content-md-center"><div class="col"><h2 class="text-center" style="font-family:'Montserrat'">SUMMARIZED DATA</h2></div></div>
 
@@ -203,6 +233,7 @@
   {% endif %}
 
 </div>
+
 
 
 </div>
@@ -635,6 +666,16 @@ $('#notification-read').click(function(){
             data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
             success: function(response){
 					$('#unread-update').html(response);
+            }
+
+        });
+
+        $.ajax({
+            url: "/update-notifications-base/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#notification_area').html(response);
             }
 
         });
