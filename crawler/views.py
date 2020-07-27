@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
 from django.contrib import messages
-from utils.crawler_spider import crawling, count_items, wiki_data
+from utils.crawler_spider import crawling, count_items, wiki_data, wiki_scraping
 from utils.news import news
 from utils.analytics import category_percent, category_count, keyword_trends
 import random, copy
@@ -12,7 +12,7 @@ from django.db.models import Count
 
 @login_required
 def index(request):
-    userprofile = UserProfile.objects.get(user=request.user)
+    userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
     category = Category.objects.all()
     notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
 
@@ -173,7 +173,10 @@ def process(request):
         temp_list1 = list()
         wiki_links = list()
         video_links = list()
+        scrape_data = ""
         no_of_links = 0
+        no_of_scrape = 0
+        wiki_scrape_temp = dict()
         colors = ['#111', '#f59042', '#555644', '#444']
 
         # print(result1)
@@ -184,16 +187,20 @@ def process(request):
             query = Keyword.objects.get_or_create(name=keyword)[0]
             query.save()
             pipeline_result = crawling(keyword, filters_list)[2]
-            pipeline_scraper_result = crawling(keyword, filters_list)[3]
+            # pipeline_scraper_result = crawling(keyword, filters_list)[3]
 
-            for category, links, scrape_links in zip(filters_list, pipeline_result, pipeline_scraper_result):
+            for category, links in zip(filters_list, pipeline_result):
 
                 cat = Category.objects.get_or_create(name=category)[0]
 
-                for link, scrape_data in zip(links, scrape_links):
+                for link in links:
 
                     if "wikipedia" in link:
+                        scrape_data, empty = wiki_scraping(link)
+                        no_of_scrape += 1
                         wiki_links.append(link)
+                        if not empty:
+                            wiki_scrape_temp[str(link)] = scrape_data
 
                     elif "youtube" in link:
                         video_links.append(link)
@@ -209,6 +216,7 @@ def process(request):
                         no_of_links += 1
 
         userprofile.crawled_links += no_of_links
+        userprofile.scraped_data += no_of_scrape
         userprofile.save()
 
         if len(main_search_list) > 2:
@@ -234,9 +242,9 @@ def process(request):
 
         random.shuffle(colors)
         print(video_links)
-
-        wikis = wiki_data(list(set(wiki_links)))
-        print(wikis)
+        print(wiki_links)
+        # wikis = wiki_data(list(set(wiki_links)))
+        print(wiki_scrape_temp)
 
         context = {
             'home': True,
@@ -254,7 +262,7 @@ def process(request):
             'random_colors': colors,
             'news_data1': news_data1,
             'news_data2': news_data2,
-            'wikis': wikis,
+            'wikis': wiki_scrape_temp,
             'main_search_list': main_search_list,
             'video_links': list(set(video_links))[:5]
         }

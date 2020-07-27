@@ -47,7 +47,7 @@ class Link(models.Model):
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    picture = models.ImageField(null=True, upload_to='profile_images')
+    picture = models.ImageField(null=True, upload_to='profile_images', default='/static/dummyuser.jpg')
     crawled_links = models.IntegerField(default=0)
     scraped_data = models.IntegerField(default=0)
     concurrency = models.IntegerField(default=1)

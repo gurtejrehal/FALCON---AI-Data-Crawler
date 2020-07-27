@@ -41,14 +41,13 @@ def crawling(query, keywords):
     lists = [general, crime, child_abuse, women_abuse, pornography, rape, cyber_bullying]
     scrape_lists = [general_scrape, crime_scrape, child_abuse_scrape, women_abuse_scrape, pornography_scrape, rape_scrape, cyber_bullying_scrape]
 
-    for keyword, list_update, scrape_list_update in zip(keywords, lists, scrape_lists):
+    for keyword, list_update in zip(keywords, lists):
         try:
             num = random.randint(7, 10)
             pages = google_query(f'{query} {keyword}', num=num)
             for result in pages:
                 list_update.append(result['link'])
                 # print(result)
-                scrape_list_update.append(result['snippet'])
 
         except:
             page = requests.get("https://www.google.co.in/search?q=" + query + keyword)
@@ -86,7 +85,7 @@ def crawling(query, keywords):
     #     'cyber_scrape': cyber_bullying_scrape
     # }
 
-    return context, reduced, lists, scrape_lists
+    return context, reduced, lists
 
 
 # def crawling(query, keywords):
@@ -142,24 +141,16 @@ def count_items(context):
     return list_count_dict
 
 
-def wiki_data(lists):
-    context = dict()
 
-    temp = list()
-
-    for i in lists:
-        temp.append(i.split('%')[0])
-
-    for link in temp:
-        page = requests.get(str(link))
-        infobox = dict()
-        if page.status_code is 200:
-            soup = BeautifulSoup(page.content, 'html.parser')
-            try:
-                table = soup.select(".infobox")[0]
-            except:
-                print(f"no table in {link}")
-                continue
+def wiki_scraping(link):
+    page = requests.get(str(link))
+    infobox = dict()
+    empty = True
+    if page.status_code is 200:
+        soup = BeautifulSoup(page.content, 'html.parser')
+        try:
+            empty= False
+            table = soup.select(".infobox")[0]
             rows = table.find_all('tr')
             flag = 1
             i = 0
@@ -173,8 +164,23 @@ def wiki_data(lists):
                         infobox[str(rows[i].th.text)] = (str(rows[i].td.text))
                 except:
                     pass
-        else:
-            print("Cant reach to servers")
-        context[str(link)] = infobox
-        # print(infobox)
+        except:
+            empty = True
+            print(f"no table in {link}")
+
+    else:
+        print("Cant reach to servers")
+    return infobox, empty
+
+
+def wiki_data(lists):
+    context = dict()
+
+    temp = list()
+
+    for i in lists:
+        temp.append(i.split('%')[0])
+
+    for link in temp:
+        context[str(link)]  = wiki_scraping(link)
     return context
