@@ -89,6 +89,12 @@
 
 		</div>
 
+		<div class="row mb-4 justify-content-start">
+			<div class="col-12">
+				<button class="btn btn-dark btn-sm" data-toggle="modal" data-target="#keyword_trends" style="font-family:'Montserrat'">See Keyword Trend's</button>
+			</div>
+		</div>
+
 	<div class="card border-0 shadow">
 		<div class="card-body">
 			<table id="datatableDefault" class="table table-sm table-borderless text-nowrap w-100">
@@ -204,7 +210,16 @@ var barChart = new Chart(ctx, {
 
       ],
       borderWidth: 1
-    }]
+    },{
+      label: '# of Links Crawled in each Category',
+      data: {{ category_data| safe }},
+      type: 'line',
+      borderColor: "#649CFF",
+      fill: false
+    }
+
+
+    ]
   },
   options: {
     responsive: true,
@@ -235,6 +250,33 @@ var barChart = new Chart(ctx, {
 
         });
 
+});
+		</script>
+
+
+		<script>
+new Chart(document.getElementById("line-chart"), {
+  type: 'line',
+  data: {
+    labels: {{ keywords_labels|safe }},
+    datasets: [
+    {% for key, value in keywords_dataset.items %}
+    {
+        data: {{ value.0|safe }},
+        label: "{{ key }}",
+        borderColor: "{{ value.1|safe }}",
+        fill: false
+      },
+       {% endfor %}
+
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Keyword searched time interest'
+    },
+  }
 });
 		</script>
 

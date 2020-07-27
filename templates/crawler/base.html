@@ -80,7 +80,9 @@
 						<div class="menu-label" id="unread-update">{{ unread_count }}</div>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right dropdown-notification" id="notification_area">
-
+								<div class="text-center">
+									<span class="spinner-grow text-primary " role="status" aria-hidden="true"></span>
+								</div>
 					</div>
 				</div>
 				<div class="menu-item dropdown">
@@ -269,6 +271,37 @@
 	{% endfor %}
 
 
+
+		{% for keyword in main_search_list %}
+		<div class="modal fade" id="modal_keyword_{{ forloop.counter }}">
+			  <div class="modal-dialog modal-md modal-dialog-centered">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h5 class="modal-title" style="font-family:'Montserrat'">{{ keyword|title }}'s trend</h5>
+					<button type="button" class="close" data-dismiss="modal">
+					  <span>×</span>
+					</button>
+				  </div>
+				  <div class="modal-body">
+					<script type="text/javascript" src="https://ssl.gstatic.com/trends_nrtr/2213_RC01/embed_loader.js"></script>
+
+						<script type="text/javascript">
+
+
+						trends.embed.renderExploreWidget("GEO_MAP", {"comparisonItem":[{"keyword": "{{ keyword }}","geo":"IN","time":"today 12-m"}],"category":0,"property":""}, {"exploreQuery":"geo=IN&q=munna&date=today 12-m","guestPath":"https://trends.google.com:443/trends/embed/"});
+
+						</script>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
+
+	{% endfor %}
+
+
 <div class="modal modal-cover fade" id="details">
   <div class="modal-dialog ">
     <div class="modal-content">
@@ -288,6 +321,24 @@
     </div>
   </div>
 </div>
+
+	<div class="modal fade" id="keyword_trends">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="font-family:'Montserrat'">Keyword Trends</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <canvas id="line-chart" ></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 <div class="toasts-container">

@@ -23,12 +23,21 @@ class Category(models.Model):
         return self.name
 
 
+    def save(self, *args, **kwargs):
+        self.name = self.name.lower().replace(' ', '_')
+        super(Category, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+
+
 
 class Link(models.Model):
 
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     link = models.TextField(max_length=250, blank=False, null=False)
+    scrape_data = models.TextField(max_length=3000, blank=True)
     pub_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

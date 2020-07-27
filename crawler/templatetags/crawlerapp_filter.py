@@ -6,5 +6,4 @@ register = template.Library()
 def change_string(value):
     return value.replace('_', ' ').title()
 
-
 # register.filter('string_format', string_format)

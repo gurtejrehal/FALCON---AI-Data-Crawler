@@ -4,8 +4,8 @@ from .models import UserProfile, Notifications, Keyword, Category, Link, Crawled
 from django.contrib import messages
 from utils.crawler_spider import crawling, count_items, wiki_data
 from utils.news import news
-from utils.analytics import category_percent, category_count
-import random
+from utils.analytics import category_percent, category_count, keyword_trends
+import random, copy
 from django.http import JsonResponse
 from django.db.models import Count
 
@@ -41,10 +41,15 @@ def crawler_index(request):
     userprofile = UserProfile.objects.get(user=request.user)
     notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
     unread = notifications.filter(read=False)
-    categories = [ i.name for i in Category.objects.all()]
+    categories = [i.name for i in Category.objects.all()]
     crawled_links = CrawledLinks.objects.order_by('-pub_date')
 
     unique_keyword = list(crawled_links.filter(userprofile=userprofile).order_by().values_list('link__keyword__name', flat=True).distinct())
+
+    copy_keyword = copy.copy(unique_keyword)
+    random.shuffle(copy_keyword)
+
+    keywords_labels, keywords_dataset = keyword_trends(copy_keyword[1:6])
 
     print(category_count(request.user))
     context['crawler_home'] = True
@@ -55,6 +60,8 @@ def crawler_index(request):
     context['categories'] = categories
     context['category_data'] = category_count(request.user)
     context['unique_keyword'] = unique_keyword
+    context['keywords_labels'] = keywords_labels
+    context['keywords_dataset'] = keywords_dataset
 
     return render(request, "crawler/crawler.html", context=context)
 
@@ -164,7 +171,8 @@ def process(request):
         list1 = list()
         list2 = list()
         temp_list1 = list()
-        wiki_links = []
+        wiki_links = list()
+        video_links = list()
         no_of_links = 0
         colors = ['#111', '#f59042', '#555644', '#444']
 
@@ -176,17 +184,21 @@ def process(request):
             query = Keyword.objects.get_or_create(name=keyword)[0]
             query.save()
             pipeline_result = crawling(keyword, filters_list)[2]
+            pipeline_scraper_result = crawling(keyword, filters_list)[3]
 
-            for category, links in zip(filters_list, pipeline_result):
+            for category, links, scrape_links in zip(filters_list, pipeline_result, pipeline_scraper_result):
 
                 cat = Category.objects.get_or_create(name=category)[0]
 
-                for link in links:
+                for link, scrape_data in zip(links, scrape_links):
 
                     if "wikipedia" in link:
                         wiki_links.append(link)
 
-                    link = Link.objects.get_or_create(keyword=query, category=cat, link=link)[0]
+                    elif "youtube" in link:
+                        video_links.append(link)
+
+                    link = Link.objects.get_or_create(keyword=query, category=cat, link=link, scrape_data=scrape_data)[0]
                     link.save()
 
                     profile_update, created = CrawledLinks.objects.get_or_create(userprofile=userprofile,
@@ -221,7 +233,7 @@ def process(request):
         count_list2 = count_items(result3)
 
         random.shuffle(colors)
-        print(list(set(wiki_links)))
+        print(video_links)
 
         wikis = wiki_data(list(set(wiki_links)))
         print(wikis)
@@ -242,7 +254,9 @@ def process(request):
             'random_colors': colors,
             'news_data1': news_data1,
             'news_data2': news_data2,
-            'wikis': wikis
+            'wikis': wikis,
+            'main_search_list': main_search_list,
+            'video_links': list(set(video_links))[:5]
         }
 
         return render(request, 'crawler/result.html', context=context)

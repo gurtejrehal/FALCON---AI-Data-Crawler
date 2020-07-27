@@ -82,7 +82,8 @@
     <div class="row">
         <div class="row">
           <button class="btn btn-dark btn-sm mr-4" id="generate_report">Generate Report</button>
-          <button class="btn btn-dark btn-sm" >Keyword Analysis</button>
+          <button class="btn btn-dark btn-sm mr-4" >Keyword Analysis</button>
+          <button class="btn btn-dark btn-sm " data-toggle="modal" data-target="#modal_keyword_{{ forloop.counter }}">{{ query }}'s Trends</button>
         </div>
         <canvas id="chart-area_{{ forloop.counter }}"></canvas>
         <div id="chartjs-tooltip_{{ forloop.counter }}">
@@ -97,7 +98,7 @@
         {% for keys, values in wikis.items %}
         <div class="card p-3">
           <div class="card-body">
-            <h5 class="card-title">{{ keys }} </h5>
+            <h5 class="card-title"><a href="{{ keys }}" target="_blank" data-toggle="popover" data-content="{{ keys }}" data-trigger="hover" data-placement="top">Scrape Preview</a> </h5>
 
             <table class="table table-sm ">
 
@@ -114,6 +115,22 @@
           </div>
         </div>
         {% endfor %}
+
+        {% if video_links %}
+  <div class="card text-white text-center p-3">
+    <blockquote class="blockquote mb-0">
+      {% for link in video_links %}
+      <p><a href="{{ link }}" target="_blank">{{ link }}</a></p>
+      {% endfor %}
+      <footer class="blockquote-footer">
+        <small>
+          Crawled by <cite title="Source Title">FALCON</cite>
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+
+        {% endif %}
 
 
       </div>
@@ -146,7 +163,7 @@
         {% for value in values %}
         <div class="card p-3">
           <div class="card-body">
-            <h5 class="card-title">{{ value.title }} </h5>
+            <h5 class="card-title"><a href="{{ value.link }}">{{ value.title }}</a> </h5>
             <h6 class="card-subtitle mb-2 text-muted">for keyword {{ keyword }}</h6>
             <p class="card-text">{{ value.desc }}</p>
             <a href="{{ value.link }}" class="card-link">Link</a>
@@ -208,7 +225,7 @@
         {% for value in values %}
         <div class="card p-3">
           <div class="card-body">
-            <h5 class="card-title">{{ value.title }} </h5>
+            <h5 class="card-title"><a href="{{ value.link }}">{{ value.title }} </a></h5>
             <h6 class="card-subtitle mb-2 text-muted">for keyword {{ keyword }}</h6>
             <p class="card-text">{{ value.desc }}</p>
             <a href="{{ value.link }}" class="card-link">Link</a>
@@ -398,7 +415,7 @@ Chart.defaults.global.tooltips.custom = function(tooltip) {
   
 			    },
 				tooltips: {
-					enabled: true,
+					enabled: false,
 				}
 			}
 		};
@@ -682,7 +699,12 @@ $('#notification-read').click(function(){
 
 });
 
+$('[data-toggle="popover"]').popover();
+
 </script>
+
+
+
 <script src="../../ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js" data-cf-settings="59f984106ec2e39727363fa8-|49" defer=""></script></body>
 
 {% endblock %}
