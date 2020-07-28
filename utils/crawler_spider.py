@@ -41,24 +41,28 @@ def crawling(query, keywords):
     lists = [general, crime, child_abuse, women_abuse, pornography, rape, cyber_bullying]
     scrape_lists = [general_scrape, crime_scrape, child_abuse_scrape, women_abuse_scrape, pornography_scrape, rape_scrape, cyber_bullying_scrape]
 
-    for keyword, list_update in zip(keywords, lists):
+    for keyword, list_update, list_update2 in zip(keywords, lists, scrape_lists):
         try:
             num = random.randint(7, 10)
             pages = google_query(f'{query} {keyword}', num=num)
             for result in pages:
-                list_update.append(result['link'])
+                list_update.append( (result['link'], result ) )
                 # print(result)
 
         except:
+            print("muthiya algo selected")
+            empty = dict()
             page = requests.get("https://www.google.co.in/search?q=" + query + keyword)
             soup = BeautifulSoup(page.content, 'html.parser')
             links = soup.findAll("a")
             result_div = soup.find_all("a", href=re.compile("(?<=/url\?q=)(htt.*://.*)"))
             for link in result_div:
+                print("here")
                 link = re.split(":(?=http)", link["href"].replace("/url?q=", ""))
                 x = str(link).split('&')
-
-                list_update.append(x[0].replace("['", ""))
+                empty = scraper(x[0].replace("['", ""))
+                list_update.append( ( x[0].replace("['", ""), empty ) )
+                list_update2.append(x[0].replace("['", ""))
 
     context = {
         'general': general,
@@ -75,6 +79,14 @@ def crawling(query, keywords):
         women_abuse[:4],
         cyber_bullying[:4]
     ]
+
+    reduced2 = [
+        general_scrape[:4],
+        crime_scrape[:4],
+        child_abuse_scrape[:4],
+        women_abuse_scrape[:4],
+        cyber_bullying_scrape[:4]
+    ]
     # print(scrape_lists)
 
     # scrape_context = {
@@ -85,7 +97,7 @@ def crawling(query, keywords):
     #     'cyber_scrape': cyber_bullying_scrape
     # }
 
-    return context, reduced, lists
+    return context, reduced, lists, reduced2
 
 
 # def crawling(query, keywords):
@@ -131,7 +143,6 @@ def count_items(context):
     temp = list()
 
     for key, value in context.items():
-
         for key2, value2 in value.items():
             temp.append(len(value2))
 
@@ -143,10 +154,12 @@ def count_items(context):
 
 
 def wiki_scraping(link):
+    print("scraping")
     page = requests.get(str(link))
     infobox = dict()
     empty = True
     if page.status_code is 200:
+        print("first success")
         soup = BeautifulSoup(page.content, 'html.parser')
         try:
             empty= False
@@ -184,3 +197,28 @@ def wiki_data(lists):
     for link in temp:
         context[str(link)]  = wiki_scraping(link)
     return context
+
+
+
+def scraper(link):
+    print(f"scraping {link}")
+    page = requests.get(str(link))
+    soup = BeautifulSoup(page.content, 'html.parser')
+    metadata = dict()
+    for tag in soup.find_all("meta"):
+        name = tag.attrs.get('name')
+        property = tag.attrs.get('property')
+        content = tag.attrs.get('content')
+        if (name or property):
+            if (name):
+                if (":" in name):
+                    names = name.split(":")
+                    name = names[1]
+                metadata[name] = content
+            else:
+                if (":" in property):
+                    props = property.split(":")
+                    property = props[1]
+                metadata[property] = content
+    print(metadata)
+    return metadata

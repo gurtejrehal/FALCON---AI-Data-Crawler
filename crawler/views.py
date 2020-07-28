@@ -194,18 +194,22 @@ def process(request):
                 cat = Category.objects.get_or_create(name=category)[0]
 
                 for link in links:
-
-                    if "wikipedia" in link:
-                        scrape_data, empty = wiki_scraping(link)
+                    print(link[0])
+                    print(link[1])
+                    if "wikipedia" in link[0]:
+                        scrape_data, empty = wiki_scraping(link[0])
                         no_of_scrape += 1
-                        wiki_links.append(link)
+                        wiki_links.append(link[0])
                         if not empty:
-                            wiki_scrape_temp[str(link)] = scrape_data
+                            wiki_scrape_temp[str(link[0])] = scrape_data
 
-                    elif "youtube" in link:
-                        video_links.append(link)
+                    elif "youtube" in link[0]:
+                        video_links.append(link[0])
 
-                    link = Link.objects.get_or_create(keyword=query, category=cat, link=link, scrape_data=scrape_data)[0]
+                    else:
+                        scrape_data = link[1]
+
+                    link = Link.objects.get_or_create(keyword=query, category=cat, link=link[0], scrape_data=scrape_data)[0]
                     link.save()
 
                     profile_update, created = CrawledLinks.objects.get_or_create(userprofile=userprofile,
@@ -229,7 +233,7 @@ def process(request):
         for query in list1:
             result1[query] = crawling(query, filters_list)[0]
             # result2[query] = crawling(query, filters_list)[1]
-            temp_list1 = crawling(query, filters_list)[1]
+            temp_list1 = crawling(query, filters_list)[3]
             news_data1[query] = news(query)
 
         for query in list2:
@@ -237,14 +241,16 @@ def process(request):
             # result4[query] = crawling(query, filters_list)[1]
             news_data2[query] = news(query)
 
+        print(temp_list1)
+
         count_list1 = count_items(result1)
         count_list2 = count_items(result3)
 
         random.shuffle(colors)
-        print(video_links)
-        print(wiki_links)
+        # print(video_links)
+        # print(wiki_links)
         # wikis = wiki_data(list(set(wiki_links)))
-        print(wiki_scrape_temp)
+        # print(wiki_scrape_temp)
 
         context = {
             'home': True,
