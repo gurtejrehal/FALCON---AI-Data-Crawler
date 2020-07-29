@@ -12,7 +12,7 @@
 	<meta content="" name="author" />
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.26.0/slimselect.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
-
+	<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;800&display=swap" rel="stylesheet">
 	<link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="favicon.png" />
 
 	<link href="{% static 'css/app.min.css' %}" rel="stylesheet" />
@@ -39,9 +39,20 @@
 {
 	background-color: #000000;
 }
+
+.section-title{
+	font-family: 'Dosis';
+	font-weight: 800;
+}
+
+.section-title-light{
+	font-family: 'Dosis';
+	font-weight: 400;
+}
 	</style>
 
 	{% block custom_style %}{% endblock %}
+
 </head>
 
 <body id="style-4">
@@ -175,8 +186,8 @@
 						</a>
 					</div>
 					<div class="p-3 px-4 mt-auto hide-on-minified">
-						<a href="{% url 'auth_logout' %}" class="btn btn-block btn-secondary font-weight-600 rounded-pill">
-<i class="fa fa-code-branch mr-1 ml-n1 opacity-5"></i> Logout</a>
+						<a href="{% url 'auth_logout' %}" class="section-title btn btn-block btn-secondary font-weight-600 rounded-pill">
+<i class="fa fa-code-branch mr-1 ml-n1 opacity-5"></i> LOGOUT</a>
 					</div>
 				</div>
 			</div>
@@ -249,17 +260,17 @@
 {% endfor %}
 
 	{% for link in crawled_links %}
-		<div class="modal fade" id="modal_link_{{ forloop.counter }}">
-			  <div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal fade" id="modal_link_{{ forloop.counter }}" tabindex="-1" role="dialog" aria-hidden="true">
+			  <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
 				<div class="modal-content">
 				  <div class="modal-header">
-					<h5 class="modal-title">Link - <a href="{{ link.link.link }}">{{ link.link.link }}</a></h5>
+					<h5 class="modal-title">Link - <a href="{{ link.link.link }}" target="_blank">{{ link.link.link }}</a></h5>
 					<button type="button" class="close" data-dismiss="modal">
 					  <span>×</span>
 					</button>
 				  </div>
 				  <div class="modal-body">
-					<p>scraped data hereee</p>
+					<pre id="json-renderer_{{ forloop.counter }}"></pre>
 				  </div>
 				  <div class="modal-footer">
 					<button type="button" class="btn btn-{% if link.link.category.name|stringformat:'s' == 'crime' %}primary{% elif link.link.category.name|stringformat:'s' == 'child_abuse' %}danger{% elif link.link.category.name|stringformat:'s' == 'woman_abuse' %}warning{% else %}teal{% endif %}" data-dismiss="modal">Close</button>
@@ -471,7 +482,7 @@ $(function() {
 $('[data-toggle="popover"]').popover();
 
 $('#main_search').submit(function(){
-	$('#submit_button').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...')
+	$('#submit_button').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>LOADING...')
 
 });
 

@@ -5,7 +5,7 @@ from django.contrib import messages
 from utils.crawler_spider import crawling, count_items, wiki_data, wiki_scraping
 from utils.news import news
 from utils.analytics import category_percent, category_count, keyword_trends
-import random, copy
+import random, copy, json
 from django.http import JsonResponse
 from django.db.models import Count
 
@@ -138,10 +138,18 @@ def read(request):
 
 
 def api(request, keyword):
+    temp = dict()
     result = news(keyword)
+    userprofile = UserProfile.objects.get(user=request.user)
+    key = Keyword.objects.get(name=keyword)
+    crawled_links = CrawledLinks.objects.filter(userprofile=userprofile, link__keyword=key)
 
+    for link in crawled_links:
+        temp[link.link.link] = link.link.scrape_data
+
+    temp["summarized data"] = result
     data = {
-        keyword: result
+        keyword: temp
     }
     return JsonResponse(data)
 
@@ -195,7 +203,7 @@ def process(request):
 
                 for link in links:
                     print(link[0])
-                    print(link[1])
+                    # print(link[1])
                     if "wikipedia" in link[0]:
                         scrape_data, empty = wiki_scraping(link[0])
                         no_of_scrape += 1
@@ -250,7 +258,7 @@ def process(request):
         # print(video_links)
         # print(wiki_links)
         # wikis = wiki_data(list(set(wiki_links)))
-        # print(wiki_scrape_temp)
+        print(wiki_scrape_temp)
 
         context = {
             'home': True,

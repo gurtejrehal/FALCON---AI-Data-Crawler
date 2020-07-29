@@ -3,7 +3,7 @@ import re, random
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 
-api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
+api_key = "AIzaSyA-as"
 cse_id = "016133495723645302024:cfibqauizrm"
 
 
@@ -47,6 +47,7 @@ def crawling(query, keywords):
             pages = google_query(f'{query} {keyword}', num=num)
             for result in pages:
                 list_update.append( (result['link'], result ) )
+                list_update2.append(result['link'])
                 # print(result)
 
         except:
@@ -87,7 +88,7 @@ def crawling(query, keywords):
         women_abuse_scrape[:4],
         cyber_bullying_scrape[:4]
     ]
-    # print(scrape_lists)
+    # print(reduced2)
 
     # scrape_context = {
     #     'general_scrape': general_scrape,
@@ -155,7 +156,7 @@ def count_items(context):
 
 def wiki_scraping(link):
     print("scraping")
-    page = requests.get(str(link))
+    page = requests.get(str(link.split('%')[0]))
     infobox = dict()
     empty = True
     if page.status_code is 200:

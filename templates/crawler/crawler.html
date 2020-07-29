@@ -1,5 +1,6 @@
 {% extends 'crawler/base.html' %}
 {% load static %}
+{% load crawlerapp_filter %}
 
 {% block title %} Crawler {% endblock %}
 
@@ -9,7 +10,12 @@
 <link href="{% static 'plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" />
 <link href="{% static 'plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" />
-
+<script
+	  src="https://code.jquery.com/jquery-3.3.1.min.js"
+	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	  crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.json-viewer.js' %}"></script>
+<link href="{% static 'css/jquery.json-viewer.css' %}" type="text/css" rel="stylesheet">
 <style>
 	/*
  *  STYLE 3
@@ -44,8 +50,8 @@
 {% block body %}
 
 <ul class="breadcrumb">
-<li class="breadcrumb-item"><a href="{% url 'crawler:index' %}">FALCON</a></li>
-<li class="breadcrumb-item active">CRAWLER</li>
+<li class="breadcrumb-item section-title"><a href="{% url 'crawler:index' %}">FALCON</a></li>
+<li class="breadcrumb-item section-title active">CRAWLER</li>
 </ul>
 
 
@@ -77,7 +83,7 @@
 						<hr>
 						{% if unique_keyword %}
 						{% for keyword in unique_keyword %}
-						<p class="card-text"><a href="{% url 'crawler:api' keyword %}"  target="_blank" class="btn btn-dark btn-sm">{{ keyword }}</a></p>
+						<p class="card-text"><a href="{% url 'crawler:api' keyword %}"  target="_blank" class="section-title btn btn-dark btn-sm">{{ keyword|upper }}</a></p>
 						{% endfor %}
 						{% else %}
 						<p class="card-text">Crawl links get API's</p>
@@ -98,14 +104,14 @@
 	<div class="card border-0 shadow">
 		<div class="card-body">
 			<table id="datatableDefault" class="table table-sm table-borderless text-nowrap w-100">
-				<thead class="thead-dark">
+				<thead class="thead-dark section-title">
 					<tr>
 						<th>#</th>
-						<th>Author</th>
-						<th>Links</th>
-						<th>Category</th>
-						<th>Keyword</th>
-						<th>Time</th>
+						<th>AUTHOR</th>
+						<th>LINKS</th>
+						<th>CATEGORY</th>
+						<th>KEYWORD</th>
+						<th>TIME</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -139,10 +145,6 @@
 
 
 {% block script %}
-<script
-	  src="https://code.jquery.com/jquery-3.3.1.min.js"
-	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-	  crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 <script src="{% static 'js/app.min.js' %}" type="59f984106ec2e39727363fa8-text/javascript"></script>
@@ -176,7 +178,9 @@
 
 $('[data-toggle="popover"]').popover();
 
-
+{% for link in crawled_links %}
+	$('#json-renderer_{{ forloop.counter }}').jsonViewer({{ link.link.scrape_data|safe }});
+{% endfor %}
 
 });
 
@@ -251,6 +255,8 @@ var barChart = new Chart(ctx, {
         });
 
 });
+
+
 		</script>
 
 

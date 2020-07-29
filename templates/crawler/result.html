@@ -49,8 +49,8 @@
 {% block body %}
 
 <ul class="breadcrumb">
-<li class="breadcrumb-item"><a href="{% url 'crawler:index' %}">FALCON</a></li>
-<li class="breadcrumb-item active">RESULT</li>
+<li class="breadcrumb-item section-title"><a href="{% url 'crawler:index' %}">FALCON</a></li>
+<li class="breadcrumb-item section-title active">RESULT</li>
 </ul>
 
 
@@ -59,7 +59,7 @@
   <ul class="nav nav-tabs">
 
     {% for query in list1 %}
-  <li class="nav-item mr-1"><a href="#tab_{{ forloop.counter }}" class="nav-link  font-weight-bold {% if forloop.counter == 1 %}active{% endif %}" data-toggle="tab" data-keyword="{{ query }}">{{ query }}</a></li>
+  <li class="nav-item mr-1"><a href="#tab_{{ forloop.counter }}" class="nav-link section-title font-weight-bold {% if forloop.counter == 1 %}active{% endif %}" data-toggle="tab" data-keyword="{{ query }}">{{ query|upper }}</a></li>
     {% endfor %}
 
     {% if list2 %}
@@ -69,7 +69,7 @@
     </a>
     <div class="dropdown-menu">
       {% for query in list2 %}
-      <a href="#dropdown_{{ forloop.counter }}" class="dropdown-item font-weight-bold" data-toggle="tab">{{ query }}</a>
+      <a href="#dropdown_{{ forloop.counter }}" class="dropdown-item section-title font-weight-bold" data-toggle="tab">{{ query }}</a>
       {% endfor %}
     </div>
   </li>
@@ -83,7 +83,8 @@
         <div class="row">
           <button class="btn btn-dark btn-sm mr-4" id="generate_report">Generate Report</button>
           <button class="btn btn-dark btn-sm mr-4" >Keyword Analysis</button>
-          <button class="btn btn-dark btn-sm " data-toggle="modal" data-target="#modal_keyword_{{ forloop.counter }}">{{ query }}'s Trends</button>
+          <button class="btn btn-dark btn-sm mr-4 " data-toggle="modal" data-target="#modal_keyword_{{ forloop.counter }}">{{ query }}'s Trends</button>
+          <a href="{% url 'crawler:api'  query  %}"  target="_blank" class="btn btn-info btn-sm font-weight-bold">Generate API for this Report</a>
         </div>
         <canvas id="chart-area_{{ forloop.counter }}"></canvas>
         <div id="chartjs-tooltip_{{ forloop.counter }}">
@@ -105,8 +106,8 @@
                 <tbody>
                 {% for key, value in values.items %}
                   <tr>
-                    <th scope="row">{{ key }}</th>
-                    <td>{{ value }}</td>
+                    <th scope="row" class="section-title">{{ key }}</th>
+                    <td class="section-title-light">{{ value }}</td>
                   </tr>
                 {% endfor %}
                 </tbody>
