@@ -3,7 +3,7 @@ import re, random
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 
-api_key = "AIzaSyA-as"
+api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
 cse_id = "016133495723645302024:cfibqauizrm"
 
 
@@ -203,23 +203,26 @@ def wiki_data(lists):
 
 def scraper(link):
     print(f"scraping {link}")
-    page = requests.get(str(link))
-    soup = BeautifulSoup(page.content, 'html.parser')
-    metadata = dict()
-    for tag in soup.find_all("meta"):
-        name = tag.attrs.get('name')
-        property = tag.attrs.get('property')
-        content = tag.attrs.get('content')
-        if (name or property):
-            if (name):
-                if (":" in name):
-                    names = name.split(":")
-                    name = names[1]
-                metadata[name] = content
-            else:
-                if (":" in property):
-                    props = property.split(":")
-                    property = props[1]
-                metadata[property] = content
-    print(metadata)
-    return metadata
+    if "youtube" in str(link):
+        return {}
+    else:
+        page = requests.get(str(link))
+        soup = BeautifulSoup(page.content, 'html.parser')
+        metadata = dict()
+        for tag in soup.find_all("meta"):
+            name = tag.attrs.get('name')
+            property = tag.attrs.get('property')
+            content = tag.attrs.get('content')
+            if (name or property):
+                if (name):
+                    if (":" in name):
+                        names = name.split(":")
+                        name = names[1]
+                    metadata[name] = content
+                else:
+                    if (":" in property):
+                        props = property.split(":")
+                        property = props[1]
+                    metadata[property] = content
+        print(metadata)
+        return metadata

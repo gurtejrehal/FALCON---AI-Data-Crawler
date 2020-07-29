@@ -10,6 +10,22 @@
 	<meta content="" name="author" />
 	<link href="{% static 'css/app.min.css' %}" rel="stylesheet" />
 	<link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="favicon.png" />
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;800&display=swap" rel="stylesheet">
+	<style>
+.head-title{
+	font-family: 'Montserrat';
+}
+.section-title{
+	font-family: 'Dosis';
+	font-weight: 800;
+}
+
+.section-title-light{
+	font-family: 'Dosis';
+	font-weight: 400;
+}
+	</style>
 </head>
 
 <body>
@@ -19,18 +35,18 @@
 				<form action="." method="post" name="login_form">
 					{% csrf_token %}
 <!--					{{ form.as_p }}-->
-					<h1 class="text-center">Sign In</h1>
+					<h1 class="text-center head-title">SIGN IN</h1>
 					<div class="text-muted text-center mb-4">For your protection, please verify your identity.</div>
 					<div class="form-group">
-						<label for="id_username">Username</label>
-						<input name="username" type="text" class="form-control form-control-lg fs-15px" value="" placeholder="username" id="id_username"/>
+						<label for="id_username" class="section-title">USERNAME</label>
+						<input name="username" type="text" class="section-title form-control form-control-lg fs-15px" value="" placeholder="username" id="id_username"/>
 					</div>
 					<div class="form-group">
 						<div class="d-flex">
-							<label for="id_password">Password</label>
+							<label for="id_password" class="section-title">PASSWORD</label>
 <a href="#" class="ml-auto text-muted">Forgot password?</a>
 						</div>
-						<input name="password" type="password" class="form-control form-control-lg fs-15px" value="" placeholder="Enter your password" id="id_password"/>
+						<input name="password" type="password" class="section-title form-control form-control-lg fs-15px" value="" placeholder="Enter your password" id="id_password"/>
 					</div>
 					<div class="form-group">
 						<div class="custom-control custom-checkbox">
@@ -38,7 +54,7 @@
 							<label class="custom-control-label fw-500" for="customCheck1">Remember me</label>
 						</div>
 					</div>
-					<button type="submit" class="btn btn-primary btn-lg btn-block fw-500 mb-3">Sign In</button>
+					<button type="submit" class="section-title btn btn-primary btn-lg btn-block fw-500 mb-3">SIGN IN</button>
 					<input type="hidden" name="next" value="{{ next }}" />
 					<div class="text-center text-muted">Don't have an account yet? <a href="page_register.html">Sign up</a>.</div>
 				</form>
