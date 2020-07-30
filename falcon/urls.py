@@ -29,6 +29,8 @@ def redirect_login(request):
 
 urlpatterns = [
     path('', redirect_login),
+    path(r'^jet/', include('jet.urls', 'jet')),
+    path(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard')),
     path('admin/', admin.site.urls),
     path('accounts/', include('registration.backends.simple.urls')),
     path('', include('crawler.urls')),

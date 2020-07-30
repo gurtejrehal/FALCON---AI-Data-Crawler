@@ -3,7 +3,7 @@ import re, random
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 
-api_key = "AIzaSyA-sadasd"
+api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
 cse_id = "016133495723645302024:cfibqauizrm"
 
 

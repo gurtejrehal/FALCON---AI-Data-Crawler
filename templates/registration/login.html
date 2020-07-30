@@ -35,7 +35,7 @@
 				<form action="." method="post" name="login_form">
 					{% csrf_token %}
 <!--					{{ form.as_p }}-->
-					<h1 class="text-center head-title">SIGN IN</h1>
+					<h1 class="text-center head-title"><img src="{% static 'img/logo.png' %}" alt="FALCON logo"></h1>
 					<div class="text-muted text-center mb-4">For your protection, please verify your identity.</div>
 					<div class="form-group">
 						<label for="id_username" class="section-title">USERNAME</label>
