@@ -67,6 +67,36 @@ def crawler_index(request):
 
 
 @login_required
+def report(request):
+    context = dict()
+    render_dict = dict()
+    temp = dict()
+    category = Category.objects.all()
+    userprofile = UserProfile.objects.get(user=request.user)
+    notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
+
+    unread = notifications.filter(read=False)
+
+    crawled_links = CrawledLinks.objects.filter(userprofile=userprofile).order_by('pub_date')
+    categories = [i.name for i in Category.objects.all()]
+    unique_keywords = list(crawled_links.values_list('link__keyword__name', flat=True).distinct())
+
+    for keyword in unique_keywords:
+        for category in categories:
+            temp[category] = CrawledLinks.objects.filter(userprofile=userprofile, link__keyword__name=keyword, link__category__name=category)
+        context[keyword] = temp
+
+    print(context)
+    render_dict['report'] = True
+    render_dict['category'] = category
+    render_dict['userprofile'] = userprofile
+    render_dict['notifications'] = notifications[:5]
+    render_dict['unread_count'] = len(unread)
+    render_dict['data'] = context
+    return render(request, "crawler/report.html", context=render_dict)
+    # return HttpResponse(context)
+
+@login_required
 def test(request):
     userprofile = UserProfile.objects.get(user=request.user)
     context = dict()

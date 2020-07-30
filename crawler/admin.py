@@ -14,6 +14,18 @@ class NotificationsAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name_plural = 'Notifications'
 
+class LinkAdmin(admin.ModelAdmin):
+    list_display = ('keyword', 'category', 'link',)
+    search_fields = ['keyword', 'category']
+    list_filter = ['keyword', 'category']
+
+
+class CrawledLinksAdmin(admin.ModelAdmin):
+    list_display = ('userprofile', 'reschedule', 'link', )
+    search_fields = ['userprofile', 'link__keyword__name', 'link__category__name']
+    list_filter = ['userprofile', 'link__category', 'link__keyword__name', ]
+    list_editable = ('reschedule', )
+
 
 # admin.site.unregister(auth.models.Group)
 # admin.site.unregister(auth.models.User)
@@ -23,5 +35,5 @@ admin.site.register(Notifications, NotificationsAdmin)
 
 admin.site.register(Keyword)
 admin.site.register(Category)
-admin.site.register(Link)
-admin.site.register(CrawledLinks)
+admin.site.register(Link, LinkAdmin)
+admin.site.register(CrawledLinks, CrawledLinksAdmin)

@@ -7,6 +7,15 @@ register = template.Library()
 def change_string(value):
     return value.replace('_', ' ').title()
 
+
+@register.filter(name='format_id')
+def format_id(value):
+    return value.replace(' ', '-').title()
+
+@register.filter(name='count_items')
+def count_items(value):
+    return value.count()
+
 @register.filter(name='jsonify_data')
 def jsonify_data(value):
     print(json.dumps(value))

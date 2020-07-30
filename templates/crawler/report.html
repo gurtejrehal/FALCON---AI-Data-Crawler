@@ -1,0 +1,237 @@
+{% extends 'crawler/base.html' %}
+{% load static %}
+{% load crawlerapp_filter %}
+
+{% block title %} Reports {% endblock %}
+
+{% block custom_style %}
+<link href="{% static 'plugins/datatables.net-bs4/css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css' %}" rel="stylesheet" />
+<script
+	  src="https://code.jquery.com/jquery-3.3.1.min.js"
+	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	  crossorigin="anonymous"></script>
+<script src="{% static 'js/jquery.json-viewer.js' %}"></script>
+<link href="{% static 'css/jquery.json-viewer.css' %}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+
+
+<ul class="breadcrumb">
+<li class="breadcrumb-item section-title"><a href="{% url 'crawler:index' %}">FALCON</a></li>
+<li class="breadcrumb-item section-title active">REPORT</li>
+</ul>
+
+<div class="container">
+
+	<div class="row mb-4">
+
+		<div class="col-md-6 ">
+				<div class="card bg-light shadow  mt-4 p-3">
+					<div class="card-body">
+						<h5 class="card-title" style="font-family:'Montserrat'">{{ userprofile.user.username|title }},</h5>
+						{% if userprofile.crawled_links %}
+						<p class="card-text">you have crawled <span class="text-primary" style="font-family:'Montserrat'">{{ userprofile.crawled_links }}</span> links and scraped <span class="text-primary" style="font-family:'Montserrat'">{{ userprofile.scraped_data }}</span> links till now.</p>
+						{% else %}
+						<p class="card-text">you haven't <span class="text-primary" style="font-family:'Montserrat'">crawled </span> any links yet.</p>
+						{% endif %}
+						<p class="card-text"><small class="text-muted">with <span class="text-primary" style="font-family:'Montserrat'">{{ userprofile.time_spent_scraping }}</span> hours spent scraping.</small></p>
+					  </div>
+				  </div>
+			</div>
+
+
+	</div>
+
+<div class="row">
+  <div class="col-3">
+    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+		{% for keys,categories in data.items %}
+      		<a class="nav-link {% if forloop.counter == 1 %}active{% endif %} section-title" id="v-pills-{{ keys|format_id }}-tab" data-toggle="pill" href="#v-pills-{{ keys|format_id }}" role="tab" aria-controls="v-pills-{{ keys|format_id }}" aria-selected="true">{{ keys|upper }}</a>
+      	{% endfor %}
+	</div>
+  </div>
+  <div class="col-9">
+
+    <div class="tab-content" id="v-pills-tabContent">
+		{% for keys, categories in data.items %}
+		  <div class="tab-pane fade {% if forloop.counter == 1 %}show active{% endif %}" id="v-pills-{{ keys|format_id }}" role="tabpanel" aria-labelledby="v-pills-{{ keys|format_id }}-tab">
+<!--				{% for category, links in categories.items %}-->
+<!--			  			<p>{{ category }}</p>-->
+<!--			  			<p>{{ links }}</p>-->
+<!--			 	{% endfor %}-->
+
+			  <h3 class="section-title">Report for <span class="head-title">{{ keys }}</span></h3>
+
+			  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+				  {% for category, links in categories.items %}
+				  {% if links %}
+				  <input type="hidden" value="{{ links|count_items }}" id="links-count-{{ keys|format_id }}-{{ category }}">
+				  <input type="hidden" value="{{ category }}" id="category-{{ category }}-{{ keys|format_id }}">
+				  <li class="nav-item" role="presentation">
+					<a class="nav-link  {% if forloop.counter == 1 %}active{% endif %}" id="pills-{{ keys|format_id }}-{{ category }}-tab" data-toggle="pill" href="#pills-{{ keys|format_id }}-{{ category }}" role="tab" aria-controls="pills-{{ keys|format_id }}-{{ category }}" aria-selected="true">{{ category|change_string }}</a>
+				  </li>
+				  {% endif %}
+				  {% endfor %}
+				</ul>
+				<div class="tab-content" id="pills-tabContent">
+					{% for category, links in categories.items %}
+					{% if links %}
+				  <div class="tab-pane fade {% if forloop.counter == 1 %}show active{% endif %}" id="pills-{{ keys|format_id }}-{{ category }}" role="tabpanel" aria-labelledby="pills-{{ keys|format_id }}-{{ category }}-tab">
+						<table id="datatableDefault-{{ keys|format_id }}-{{ category }}" class="table table-sm table-borderless text-nowrap w-100">
+							<thead class="thead-dark section-title">
+								<tr>
+									<th>#</th>
+									<th>LINKS</th>
+									<th>TIME</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for link in links %}
+									<tr>
+										<td>{{ forloop.counter }}</td>
+										<td data-toggle="popover" data-content="{{ link.link.link }}" data-trigger="hover" data-placement="left">
+											<a href="#" data-toggle="modal" data-target="#modal-report-{{ keys|format_id }}-{{ category }}-{{ forloop.counter }}">
+											{{ link.link.link|truncatechars:30 }}
+											</a>
+										</td>
+										<td>{{ link.pub_date }}</td>
+									</tr>
+								{% endfor %}
+
+							</tbody>
+						</table>
+
+				  </div>
+					{% endif %}
+					{% endfor %}
+				</div>
+
+
+		</div>
+		{% endfor %}
+	</div>
+
+
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block script %}
+
+<!--<script-->
+<!--	  src="https://code.jquery.com/jquery-3.3.1.min.js"-->
+<!--	  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="-->
+<!--	  crossorigin="anonymous"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<script data-cfasync="false" src="../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="{% static 'js/app.min.js' %}" type="59f984106ec2e39727363fa8-text/javascript"></script>
+<script src="{% static 'plugins/chart.js/dist/Chart.min.js' %}" ></script>
+<script src="{% static 'plugins/datatables.net/js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.colVis.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.flash.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons/js/buttons.print.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+<script src="{% static 'plugins/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js' %}"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+<script type="59f984106ec2e39727363fa8-text/javascript">
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','../../www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-53034621-1', 'auto');
+	  ga('send', 'pageview');
+
+	</script>
+
+<script>
+
+$('#notification-read').click(function(){
+	$.ajax({
+            url: "/read/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#unread-update').html(response);
+            }
+
+        });
+
+        $.ajax({
+            url: "/update-notifications-base/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#notification_area').html(response);
+            }
+
+        });
+
+});
+
+$('[data-toggle="popover"]').popover();
+
+</script>
+
+<script>
+  $(function() {
+
+{% for keys, categories in data.items %}
+
+{% for category, links in categories.items %}
+	{% if links %}
+	$('#datatableDefault-{{ keys|format_id }}-{{ category }}').DataTable({
+		dom: "<'row mb-3'<'col-sm-4'l><'col-sm-8 text-right'<'d-flex justify-content-end'fB>>>t<'d-flex align-items-center'<'mr-auto'i><'mb-0'p>>",
+		lengthMenu: [ 20, 30, 40, 50, 60 ],
+		responsive: true,
+		buttons: [
+		  { extend: 'print', className: 'btn btn-default' },
+		  { extend: 'csv', className: 'btn btn-default' }
+		]
+	  });
+
+	{% endif %}
+
+{% endfor %}
+{% endfor %}
+
+
+{% for keys, categories in data.items %}
+
+{% for category, links in categories.items %}
+	{% if links %}
+		{% for link in links %}
+			$('#json-renderer-{{ keys|format_id }}-{{ category }}-{{ forloop.counter }}').jsonViewer({{ link.link.scrape_data|safe }});
+		{% endfor %}
+	{% endif %}
+
+{% endfor %}
+{% endfor %}
+});
+
+</script>
+
+
+
+<script src="../../ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js" data-cf-settings="59f984106ec2e39727363fa8-|49" defer=""></script></body>
+
+{% endblock %}
