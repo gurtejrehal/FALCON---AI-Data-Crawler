@@ -2,12 +2,19 @@ import requests
 import re, random
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
+from twitterscraper import query_tweets
+import datetime as dt
 
 api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
 cse_id = "016133495723645302024:cfibqauizrm"
 
 
 def google_query(query, **kwargs):
+    """
+    :param query:
+    :param kwargs:
+    :return: scrape data
+    """
     query_service = build("customsearch", "v1", developerKey=api_key)
     query_results = query_service.cse().list(q=query, cx=cse_id, **kwargs).execute()
 
@@ -24,6 +31,12 @@ keywords = ["Crime",
 
 
 def crawling(query, keywords):
+    """
+
+    :param query:
+    :param keywords:
+    :return: crawled links, scrape data
+    """
     general = list()
     crime = list()
     child_abuse = list()
@@ -140,6 +153,11 @@ def crawling(query, keywords):
 
 
 def count_items(context):
+    """
+
+    :param context:
+    :return: data for analytics
+    """
     list_count_dict = dict()
     temp = list()
 
@@ -155,6 +173,11 @@ def count_items(context):
 
 
 def wiki_scraping(link):
+    """
+
+    :param link:
+    :return: scraping tables and meta
+    """
     print("scraping")
     page = requests.get(str(link.split('%')[0]))
     infobox = dict()
@@ -188,6 +211,11 @@ def wiki_scraping(link):
 
 
 def wiki_data(lists):
+    """
+
+    :param lists:
+    :return: dictionary of meta data
+    """
     context = dict()
 
     temp = list()
@@ -202,6 +230,11 @@ def wiki_data(lists):
 
 
 def scraper(link):
+    """
+
+    :param link:
+    :return: scrape data
+    """
     print(f"scraping {link}")
     if "youtube" in str(link):
         return {}
@@ -226,3 +259,12 @@ def scraper(link):
                     metadata[property] = content
         print(metadata)
         return metadata
+
+
+def social_media_scrape(keyword):
+    result = {}
+    temp = {}
+    base_url = 'twitter.com'
+    query = str(keyword) + " crime"
+    tweets = query_tweets(query, limit=1, begindate=dt.date(2020, 3, 21))
+    return tweets

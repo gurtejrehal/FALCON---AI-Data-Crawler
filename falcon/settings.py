@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crawler.apps.CrawlerConfig',
+    'scheduler.apps.SchedulerConfig'
 ]
 
 MIDDLEWARE = [

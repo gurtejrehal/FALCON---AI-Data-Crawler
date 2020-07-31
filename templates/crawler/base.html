@@ -144,15 +144,15 @@
 						</a>
 					</div>
 					<div class="menu-item">
-						<a href="widgets.html" class="menu-link">
+						<a href="{% url 'crawler:scheduler:index' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-star"></i></span>
-							<span class="menu-text">Scraper</span>
+							<span class="menu-text">Scheduler</span>
 						</a>
 					</div>
 					<div class="menu-item">
-						<a href="widgets.html" class="menu-link">
-<span class="menu-icon"><i class="fa fa-database"></i></span>
-							<span class="menu-text">Versioned Data</span>
+						<a href="/admin" class="menu-link">
+<span class="menu-icon"><i class="fa fa-fire"></i></span>
+							<span class="menu-text">Admin</span>
 						</a>
 					</div>
 
@@ -356,11 +356,30 @@
         </button>
       </div>
       <div class="modal-body">
-        <p>scraped data hereee</p>
+        scrape data here
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="social_media">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="font-family:'Montserrat'">Social Media Scraped data</h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span>×</span>
+        </button>
+      </div>
+      <div class="modal-body" id="social_media_body">
+
+		  <img src="https://cssauthor.com/wp-content/uploads/2018/06/Animated-Loading-%C3%97-1.gif" alt="loading">
+
+
       </div>
     </div>
   </div>

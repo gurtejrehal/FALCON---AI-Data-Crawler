@@ -1,0 +1,60 @@
+<div class="container-fluid">
+
+<div class="card-columns mt-4 mb-4 mr-4">
+
+        {% for tweet in scrape_data %}
+        <div class="card p-3">
+          <div class="card-body">
+            <h5 class="card-title">
+                <i class="fa fa-circle fs-9px fa-fw text-primary"></i>
+                Tweet {{ forloop.counter }}</h5>
+
+            <table class="table table-sm table-borderless ">
+
+                <tbody>
+
+                  <tr>
+                    <th scope="row" class="section-title">Time</th>
+                    <td class="section-title-light" >{{ tweet.timestamp }}</td>
+                  </tr>
+                <tr>
+                    <th scope="row" class="section-title">Screen Name</th>
+                    <td class="section-title-light" >{{ tweet.screen_name }}</td>
+                  </tr>
+                <tr>
+                    <th scope="row" class="section-title">Username</th>
+                    <td class="section-title-light" >{{ tweet.username }}</td>
+                  </tr>
+                <tr>
+                    <th scope="row" class="section-title">Tweet URL</th>
+                    <td class="section-title-light" style="word-wrap: break-word;">
+                        <a href="https://twitter.com/{{ tweet.tweet_url }}"></a>https://twitter.com/{{ tweet.tweet_url }}</td>
+                  </tr>
+                <tr>
+                    <th scope="row" class="section-title">Text</th>
+                    <td class="section-title-light" style="word-wrap: break-word;">{{ tweet.text }}</td>
+                  </tr>
+                <tr>
+                    <th scope="row" class="section-title">Hashtags</th>
+                    <td class="section-title-light" >{{ tweet.hashtags }}</td>
+                  </tr>
+                <tr>
+                    <th scope="row" class="section-title">Likes</th>
+                    <td class="section-title-light" >{{ tweet.likes }}</td>
+                  </tr>
+                <tr>
+                    <th scope="row" class="section-title">Retweets</th>
+                    <td class="section-title-light" >{{ tweet.retweets }}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+          </div>
+        </div>
+        {% endfor %}
+
+
+
+      </div>
+
+</div>

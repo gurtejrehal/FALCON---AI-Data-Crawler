@@ -6,6 +6,9 @@ import random, math
 
 
 class Keyword(models.Model):
+    """
+    Keywords Table
+    """
 
     name = models.CharField(max_length=100, blank=False, null=False)
     pub_date = models.DateTimeField(auto_now_add=True)
@@ -15,6 +18,9 @@ class Keyword(models.Model):
 
 
 class Category(models.Model):
+    """
+    Category Table
+    """
 
     name = models.CharField(max_length=20, blank=False, null=False)
 
@@ -33,6 +39,9 @@ class Category(models.Model):
 
 
 class Link(models.Model):
+    """
+    Link Table
+    """
 
     keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -46,6 +55,9 @@ class Link(models.Model):
 
 
 class UserProfile(models.Model):
+    """
+    Userprofile Table
+    """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     picture = models.ImageField(null=True, upload_to='profile_images', default='/static/dummyuser.jpg')
     crawled_links = models.IntegerField(default=0)
@@ -76,6 +88,9 @@ class UserProfile(models.Model):
 
 
 class CrawledLinks(models.Model):
+    """
+    Crawled Links Table
+    """
 
     userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     link = models.ForeignKey(Link, on_delete=models.CASCADE)
@@ -149,6 +164,9 @@ class CrawledLinks(models.Model):
 
 
 class Notifications(models.Model):
+    """
+    Notifications Table
+    """
 
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     content = models.CharField(max_length=100, blank=False, null=False)

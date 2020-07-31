@@ -1,5 +1,5 @@
 from crawler import views
-from django.urls import path
+from django.urls import path, include
 
 app_name = 'crawler'
 
@@ -13,5 +13,7 @@ urlpatterns = [
     path('read/', views.read, name='read'),
     path('result/', views.process, name='process'),
     path('test/', views.test, name='test'),
-    path('falcon-api/<str:keyword>/', views.api, name='api')
+    path('social-scrape-data/', views.social, name='social'),
+    path('falcon-api/<str:keyword>/', views.api, name='api'),
+    path('scheduler/', include('scheduler.urls'), name='scheduler'),
 ]

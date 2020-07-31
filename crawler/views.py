@@ -1,8 +1,9 @@
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
+from crawler.models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
+from scheduler.models import ScrapedLink
 from django.contrib import messages
-from utils.crawler_spider import crawling, count_items, wiki_data, wiki_scraping
+from utils.crawler_spider import crawling, count_items, wiki_data, wiki_scraping, social_media_scrape
 from utils.news import news
 from utils.analytics import category_percent, category_count, keyword_trends
 import random, copy, json
@@ -12,6 +13,11 @@ from django.db.models import Count
 
 @login_required
 def index(request):
+    """
+
+    :param request:
+    :return: Home Page
+    """
     userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
     category = Category.objects.all()
     notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
@@ -36,7 +42,11 @@ def index(request):
 
 @login_required
 def crawler_index(request):
+    """
 
+    :param request:
+    :return: Crawler Page
+    """
     context = dict()
     userprofile = UserProfile.objects.get(user=request.user)
     notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
@@ -68,6 +78,11 @@ def crawler_index(request):
 
 @login_required
 def report(request):
+    """
+
+    :param request:
+    :return: Detailed Report
+    """
     context = dict()
     render_dict = dict()
     temp = dict()
@@ -98,6 +113,11 @@ def report(request):
 
 @login_required
 def test(request):
+    """
+
+    :param request:
+    :return: Beta Testing
+    """
     userprofile = UserProfile.objects.get(user=request.user)
     context = dict()
     context['userprofile'] = userprofile
@@ -105,7 +125,23 @@ def test(request):
 
 
 @login_required
+def social(request):
+    if request.method == 'POST':
+        keyword = request.POST.get('keyword')
+        scrape_data = social_media_scrape(keyword)
+        context = {
+            'scrape_data': scrape_data
+        }
+        return render(None, 'crawler/social.html', context=context)
+
+
+@login_required
 def update(request):
+    """
+
+    :param request:
+    :return: update profile settings
+    """
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
         query = str(request.POST['query'])
@@ -131,6 +167,11 @@ def update(request):
 
 @login_required
 def update_notifications(request):
+    """
+
+    :param request:
+    :return: generate report Notifications
+    """
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
         keyword = str(request.POST['keyword'])
@@ -143,6 +184,11 @@ def update_notifications(request):
 
 @login_required
 def update_notifications_base(request):
+    """
+
+    :param request:
+    :return: Notifications
+    """
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
         notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
@@ -156,6 +202,11 @@ def update_notifications_base(request):
 
 @login_required
 def read(request):
+    """
+
+    :param request:
+    :return: Notifcations read/unread
+    """
     if request.method == 'POST':
         userprofile = UserProfile.objects.get(user=request.user)
         notifications = Notifications.objects.filter(user=userprofile)
@@ -168,6 +219,12 @@ def read(request):
 
 
 def api(request, keyword):
+    """
+
+    :param request:
+    :param keyword:
+    :return: Falcon Custom API
+    """
     temp = dict()
     result = news(keyword)
     userprofile = UserProfile.objects.get(user=request.user)
@@ -186,6 +243,11 @@ def api(request, keyword):
 
 @login_required
 def process(request):
+    """
+
+    :param request:
+    :return: Result Page
+    """
     if request.method == 'POST':
 
         userprofile = UserProfile.objects.get(user=request.user)
@@ -211,10 +273,14 @@ def process(request):
         temp_list1 = list()
         wiki_links = list()
         video_links = list()
+        pdfs = list()
+        images = list()
         scrape_data = ""
         no_of_links = 0
         no_of_scrape = 0
         wiki_scrape_temp = dict()
+        scrape_data_dict = dict()
+        scrape_data_dict_main = dict()
         colors = ['#111', '#f59042', '#555644', '#444']
 
         # print(result1)
@@ -241,11 +307,20 @@ def process(request):
                         if not empty:
                             wiki_scrape_temp[str(link[0])] = scrape_data
 
+                    elif link[0].endswith("pdf"):
+                        pdfs.append(link[0])
+
                     elif "youtube" in link[0]:
                         video_links.append(link[0])
 
                     else:
                         scrape_data = link[1]
+
+                    scrape_data_dict[link[0]] = scrape_data
+
+                    scraped_link = ScrapedLink.objects.get_or_create(link=link[0], scrape_data=scrape_data,
+                                                                     schedule_day=reschedule_crawler)[0]
+                    scraped_link.save()
 
                     link = Link.objects.get_or_create(keyword=query, category=cat, link=link[0], scrape_data=scrape_data)[0]
                     link.save()
@@ -256,6 +331,8 @@ def process(request):
 
                     if created:
                         no_of_links += 1
+
+            scrape_data_dict_main[keyword] = scrape_data_dict
 
         userprofile.crawled_links += no_of_links
         userprofile.scraped_data += no_of_scrape
@@ -308,7 +385,9 @@ def process(request):
             'news_data2': news_data2,
             'wikis': wiki_scrape_temp,
             'main_search_list': main_search_list,
-            'video_links': list(set(video_links))[:5]
+            'video_links': list(set(video_links))[:5],
+            'pdfs': pdfs,
+            'scrape_data_dict_main': scrape_data_dict_main
         }
 
         return render(request, 'crawler/result.html', context=context)

@@ -83,8 +83,10 @@
         <div class="row">
           <button class="btn btn-dark btn-sm mr-4" id="generate_report">Generate Report</button>
           <button class="btn btn-dark btn-sm mr-4" >Keyword Analysis</button>
-          <button class="btn btn-dark btn-sm mr-4 " data-toggle="modal" data-target="#modal_keyword_{{ forloop.counter }}">{{ query }}'s Trends</button>
-          <a href="{% url 'crawler:api'  query  %}"  target="_blank" class="btn btn-info btn-sm font-weight-bold">Generate API for this Report</a>
+          <button class="btn btn-dark btn-sm mr-4 "  data-toggle="modal" data-target="#modal_keyword_{{ forloop.counter }}">{{ query }}'s Trends</button>
+          <input type="hidden" value="{{ query }}" id="hidden-social">
+          <button class="btn btn-warning btn-sm mr-4 " id="social_media_btn" data-toggle="modal" data-target="#social_media">Social Media Data</button>
+          <a href="{% url 'crawler:api'  query  %}"  target="_blank" class="btn btn-info btn-sm font-weight-bold">Generate API for the Report {{ query|upper }}</a>
         </div>
         <canvas id="chart-area_{{ forloop.counter }}"></canvas>
         <div id="chartjs-tooltip_{{ forloop.counter }}">
@@ -122,6 +124,22 @@
     <blockquote class="blockquote mb-0">
       {% for link in video_links %}
       <p><a href="{{ link }}" target="_blank">{{ link }}</a></p>
+      {% endfor %}
+      <footer class="blockquote-footer">
+        <small>
+          Crawled by <cite title="Source Title">FALCON</cite>
+        </small>
+      </footer>
+    </blockquote>
+  </div>
+
+        {% endif %}
+
+        {% if pdfs %}
+  <div class="card text-white text-center p-3 bg-gray-600">
+    <blockquote class="blockquote mb-0">
+      {% for pdf in pdfs %}
+      <p><a href="{{ pdf }}" target="_blank">{{ pdf }}</a></p>
       {% endfor %}
       <footer class="blockquote-footer">
         <small>
@@ -697,6 +715,22 @@ $('#notification-read').click(function(){
             }
 
         });
+
+});
+
+$('#social_media_btn').click(function(){
+
+
+	$.ajax({
+            url: "/social-scrape-data/",
+            type: "POST",
+            data: { 'keyword' : $('#hidden-social').val(), "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+              $('#social_media_body').html(response);
+            }
+
+        });
+
 
 });
 

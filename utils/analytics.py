@@ -4,6 +4,11 @@ import random
 
 
 def category_count(user):
+    """
+
+    :param user:
+    :return: category count for each keyword
+    """
     temp = list()
 
     categories = Category.objects.all()
@@ -18,6 +23,11 @@ def category_count(user):
 
 
 def category_percent(user):
+    """
+
+    :param user:
+    :return: percentage of each category
+    """
     temp = category_count(user)
     total = sum(temp)
     percent = list()
@@ -36,6 +46,10 @@ def category_percent(user):
 
 
 def keyword_trends(keyword_list):
+    """
+    :param keyword_list:
+    :return: Trends on keywords
+    """
     context = dict()
     temp = list()
     try:
@@ -56,3 +70,5 @@ def keyword_trends(keyword_list):
         print(" no trends")
 
     return temp, context
+
+
