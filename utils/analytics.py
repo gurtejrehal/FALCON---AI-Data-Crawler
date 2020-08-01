@@ -15,7 +15,8 @@ def category_count(user):
     userprofile = UserProfile.objects.get(user=user)
 
     for category in categories:
-        links = len(CrawledLinks.objects.filter(userprofile=userprofile, link__category__name=category.name))
+        links = len(CrawledLinks.objects.filter(
+            userprofile=userprofile, link__category__name=category.name))
 
         temp.append(links)
 
@@ -55,7 +56,7 @@ def keyword_trends(keyword_list):
     try:
 
         pytrend = TrendReq(timeout=(10, 25), backoff_factor=0.5)
-        color = lambda: random.randint(0, 255)
+        def color(): return random.randint(0, 255)
         pytrend.build_payload(kw_list=keyword_list)
         interest_over_time_df = pytrend.interest_over_time()
         labels = interest_over_time_df.index.tolist()
@@ -64,11 +65,10 @@ def keyword_trends(keyword_list):
             temp.append(str(item))
 
         for keyword in keyword_list:
-            context[keyword] = interest_over_time_df[keyword].tolist(), ('#%02X%02X%02X' % (color(), color(), color()))
+            context[keyword] = interest_over_time_df[keyword].tolist(
+            ), ('#%02X%02X%02X' % (color(), color(), color()))
 
     except:
         print(" no trends")
 
     return temp, context
-
-
