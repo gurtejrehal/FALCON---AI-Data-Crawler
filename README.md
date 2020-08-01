@@ -47,7 +47,8 @@ password - Sih#2020
 - Scalable to Crawl 10 Millions Link and Scrape 1 Million Links
 
 
-![new](https://user-images.githubusercontent.com/28597524/89068995-ec82ca80-d38f-11ea-95a1-5a03eb366428.png "FALCON Results")
+![collage (1)](https://user-images.githubusercontent.com/28597524/89094557-b4f13e00-d3e2-11ea-8bb6-13c6b3111271.jpg "FALCON Results")
+
 
 
 
