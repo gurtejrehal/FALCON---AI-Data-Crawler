@@ -1,5 +1,6 @@
 import requests
-import re, random
+import re
+import random
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 from twitterscraper import query_tweets
@@ -16,7 +17,8 @@ def google_query(query, **kwargs):
     :return: scrape data
     """
     query_service = build("customsearch", "v1", developerKey=api_key)
-    query_results = query_service.cse().list(q=query, cx=cse_id, **kwargs).execute()
+    query_results = query_service.cse().list(
+        q=query, cx=cse_id, **kwargs).execute()
 
     try:
         return query_results['items']
@@ -51,31 +53,36 @@ def crawling(query, keywords):
     pornography_scrape = list()
     rape_scrape = list()
     cyber_bullying_scrape = list()
-    lists = [general, crime, child_abuse, women_abuse, pornography, rape, cyber_bullying]
-    scrape_lists = [general_scrape, crime_scrape, child_abuse_scrape, women_abuse_scrape, pornography_scrape, rape_scrape, cyber_bullying_scrape]
+    lists = [general, crime, child_abuse, women_abuse,
+             pornography, rape, cyber_bullying]
+    scrape_lists = [general_scrape, crime_scrape, child_abuse_scrape,
+                    women_abuse_scrape, pornography_scrape, rape_scrape, cyber_bullying_scrape]
+    base_search_url = "https://www.google.co.in/search?q="
 
     for keyword, list_update, list_update2 in zip(keywords, lists, scrape_lists):
         try:
             num = random.randint(7, 10)
             pages = google_query(f'{query} {keyword}', num=num)
             for result in pages:
-                list_update.append( (result['link'], result ) )
+                list_update.append((result['link'], result))
                 list_update2.append(result['link'])
                 # print(result)
 
         except:
-            print("muthiya algo selected")
+            print("bs4 algo running...")
             empty = dict()
-            page = requests.get("https://www.google.co.in/search?q=" + query + keyword)
+            page = requests.get(base_search_url + query + keyword)
             soup = BeautifulSoup(page.content, 'html.parser')
             links = soup.findAll("a")
-            result_div = soup.find_all("a", href=re.compile("(?<=/url\?q=)(htt.*://.*)"))
+            result_div = soup.find_all(
+                "a", href=re.compile("(?<=/url\?q=)(htt.*://.*)"))
             for link in result_div:
                 print("here")
-                link = re.split(":(?=http)", link["href"].replace("/url?q=", ""))
+                link = re.split(
+                    ":(?=http)", link["href"].replace("/url?q=", ""))
                 x = str(link).split('&')
                 empty = scraper(x[0].replace("['", ""))
-                list_update.append( ( x[0].replace("['", ""), empty ) )
+                list_update.append((x[0].replace("['", ""), empty))
                 list_update2.append(x[0].replace("['", ""))
 
     context = {
@@ -171,7 +178,6 @@ def count_items(context):
     return list_count_dict
 
 
-
 def wiki_scraping(link):
     """
 
@@ -186,7 +192,7 @@ def wiki_scraping(link):
         print("first success")
         soup = BeautifulSoup(page.content, 'html.parser')
         try:
-            empty= False
+            empty = False
             table = soup.select(".infobox")[0]
             rows = table.find_all('tr')
             flag = 1
@@ -224,9 +230,8 @@ def wiki_data(lists):
         temp.append(i.split('%')[0])
 
     for link in temp:
-        context[str(link)]  = wiki_scraping(link)
+        context[str(link)] = wiki_scraping(link)
     return context
-
 
 
 def scraper(link):
@@ -265,6 +270,6 @@ def social_media_scrape(keyword):
     result = {}
     temp = {}
     base_url = 'twitter.com'
-    query = str(keyword) + " crime"
+    query = str(keyword) + " " + keywords[0]
     tweets = query_tweets(query, limit=1, begindate=dt.date(2020, 3, 21))
     return tweets
