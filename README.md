@@ -24,6 +24,9 @@ Deployed [here](http://sih2020sk216slytherin.pythonanywhere.com "here").
 
 [![Deploy](https://www.pythonanywhere.com/static/anywhere/images/PA-logo.svg)](http://sih2020sk216slytherin.pythonanywhere.com)
 
+### Test User
+username - sih2020sk216
+password - Sih#2020
 
 
 ## Features
