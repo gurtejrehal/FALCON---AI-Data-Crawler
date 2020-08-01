@@ -18,6 +18,11 @@ For consuming the results, Falcon provides several options. It has its own visua
 FALCON is capable of crawling ten million links and scrape one million links per month using Celery Worker. It moreover has the potential of outperforming this number if tested under standard cloud platforms. 
 
 
+## Deployed on Pythonanywhere
+
+Deployed [here](http://sih2020sk216slytherin.pythonanywhere.com "here").
+
+[![Deploy](https://www.pythonanywhere.com/static/anywhere/images/PA-logo.svg)](http://sih2020sk216slytherin.pythonanywhere.com)
 
 
 
