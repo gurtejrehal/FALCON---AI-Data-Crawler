@@ -124,6 +124,30 @@ def test(request):
     context['userprofile'] = userprofile
     return render(request, "crawler/result.html", context=context)
 
+@login_required
+def calendar(request):
+    """
+
+    :param request:
+    :return: Home Page
+    """
+    userprofile = UserProfile.objects.get_or_create(user=request.user)[0]
+    category = Category.objects.all()
+    notifications = Notifications.objects.filter(user=userprofile).order_by('-pub_date')
+
+    unread = notifications.filter(read=False)
+
+
+    context = dict()
+    context['calendar'] = True
+    context['category'] = category
+    context['userprofile'] = userprofile
+    context['notifications'] = notifications[:5]
+    context['unread_count'] = len(unread)
+
+
+    return render(request, "crawler/calendar.html", context=context)
+
 
 @login_required
 def social(request):

@@ -133,8 +133,7 @@
 				</button>
 			</div>
 			<div class="brand">
-							<button id="en" class="translate">English</button>
-			<button id="hin" class="translate">हिन्दी</button>
+
 				<div class="desktop-toggler">
 					<button type="button" class="menu-toggler" data-toggle="sidebar-minify">
 <span class="bar"></span>
@@ -154,6 +153,8 @@
 						<input type="text" class="form-control" placeholder="Search menu..." />
 					</div>
 				</form>
+				<button id="en" class="translate btn btn-dark btn-sm mr-2">English</button>
+			<button id="hin" class="translate btn btn-dark btn-sm">हिन्दी</button>
 				<div class="menu-item dropdown" id="notification-read">
 					<a href="#" data-toggle="dropdown" data-display="static" class="menu-link">
 						<div class="menu-icon"><i class="fa fa-bell nav-icon"></i>
@@ -238,8 +239,8 @@
 							<span class="menu-text lang" key="profile">Profile</span>
 						</a>
 					</div>
-					<div class="menu-item">
-						<a href="calendar.html" class="menu-link">
+					<div class="menu-item {% if calendar %}active{% endif %}">
+						<a href="{% url 'crawler:calendar' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-calendar"></i></span>
 							<span class="menu-text lang" key="calendar">Calendar</span>
 						</a>

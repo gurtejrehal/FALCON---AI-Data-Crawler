@@ -1,0 +1,90 @@
+{% extends 'crawler/base.html' %}
+{% load static %}
+{% load crawlerapp_filter %}
+
+{% block title %} Calender{% endblock %}
+
+{% block custom_style %}
+<link href="{% static 'plugins/calendar/core/main.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/calendar/daygrid/main.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/calendar/timegrid/main.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/calendar/list/main.min.css' %}" rel="stylesheet" />
+<link href="{% static 'plugins/calendar/bootstrap/main.min.css' %}" rel="stylesheet" />
+{% endblock %}
+
+
+{% block body %}
+<div class="calendar">
+
+<div class="calendar-body">
+<div id="calendar"></div>
+</div>
+
+
+<div class="calendar-sidebar">
+<div class="desktop-sticky-top flex-fill">
+<div class="calendar-sidebar-title">Draggable Events:</div>
+<div class="fc-event-list" id="external-events">
+<div class="fc-event-item"><div class="fc-event-link" data-color="#ff2d55"><i class="fa fa-circle fs-8px mr-2 text-pink"></i> Meeting</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#ff3b30"><i class="fa fa-circle fs-8px mr-2 text-danger"></i> Group Discussion</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#FF9500"><i class="fa fa-circle fs-8px mr-2 text-warning"></i> Brainstorming</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#FFCC00"><i class="fa fa-circle fs-8px mr-2 text-yellow"></i> Presentation</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#1ABD36"><i class="fa fa-circle fs-8px mr-2 text-success"></i> Holiday</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#0cd096"><i class="fa fa-circle fs-8px mr-2 text-teal"></i> Sick Leave</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#30beff"><i class="fa fa-circle fs-8px mr-2 text-info"></i> Overtime</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#1f6bff"><i class="fa fa-circle fs-8px mr-2 text-blue"></i> Work from Home</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#640DF3"><i class="fa fa-circle fs-8px mr-2 text-indigo"></i> Business Travel</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#5b2e91"><i class="fa fa-circle fs-8px mr-2 text-purple"></i> Breakfast</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#869ac0"><i class="fa fa-circle fs-8px mr-2 text-muted"></i> Lunch</div></div>
+<div class="fc-event-item"><div class="fc-event-link" data-color="#869ac0"><i class="fa fa-circle fs-8px mr-2 text-muted"></i> Dinner</div></div>
+</div>
+</div>
+</div>
+
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+<script src="{% static 'js/app.min.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'plugins/moment/moment.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'plugins/calendar/core/main.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'plugins/calendar/daygrid/main.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'plugins/calendar/timegrid/main.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'plugins/calendar/interaction/main.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'plugins/calendar/list/main.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'plugins/calendar/bootstrap/main.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+<script src="{% static 'js/demo/calendar.demo.js' %}" type="48d7d880bf1fa512cb1b4416-text/javascript"></script>
+	<script>
+			$('#notification-read').click(function(){
+	$.ajax({
+            url: "/read/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#unread-update').html(response);
+            }
+
+        });
+
+        $.ajax({
+            url: "/update-notifications-base/",
+            type: "POST",
+            data: { 'status' : true, "csrfmiddlewaretoken" : $("input[name=csrfmiddlewaretoken]").val()},
+            success: function(response){
+					$('#notification_area').html(response);
+            }
+
+        });
+
+});
+
+
+		</script>
+{% endblock %}

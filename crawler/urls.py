@@ -13,6 +13,7 @@ urlpatterns = [
     path('read/', views.read, name='read'),
     path('result/', views.process, name='process'),
     path('test/', views.test, name='test'),
+    path('calender/', views.calendar, name='calendar'),
     path('social-scrape-data/', views.social, name='social'),
     path('falcon-api/<str:keyword>/', views.api, name='api'),
     path('scheduler/', include('scheduler.urls'), name='scheduler'),

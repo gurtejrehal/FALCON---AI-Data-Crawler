@@ -26,9 +26,6 @@ def rescrape_one():
     old_data = old_link.scrape_data
     format_data = {
         'result': old_data,
-        'hey': [{
-            'new': old_data
-        }]
     }
     done = False
     score = check.total_score(format_data, new_data)
