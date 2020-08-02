@@ -5,7 +5,7 @@
 {% block body %}
 
 			<h1 class="page-header mb-3 section-title">
-Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawling today.</small>
+<span key="welcome" class="lang">Hi</span>, {{ userprofile.user.username|capfirst }}.<small class="lang" key="tell"> tell us what you are crawling today.</small>
 </h1>
 			<div class="row">
 				<div class="col-xl-9">
@@ -28,13 +28,13 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 								<div class="col-md-8">
 									<div class="col-md-12">
 										<div class="mr-auto">
-											<h5 class="text-white-transparent-8 mb-3 section-title">MAKE YOUR SEARCH</h5>
+											<h5 class="text-white-transparent-8 mb-3 section-title lang" key="search">MAKE YOUR SEARCH</h5>
 											<div class="text-white mt-n1 mb-1 ">
 												<div class="form-group">
 													<input type="text" name="main_search" class="form-control form-control-lg" id="tagsinput-default" data-role="tagsinput" required/>
 												</div>
 											</div>
-											<p class="mb-1 text-white-transparent-6 text-truncate">
+											<p class="mb-1 text-white-transparent-6 text-truncate lang" key="increase">
 <i class="fa fa-caret-up"></i>  <b>32%</b> increase compare to last week</p>
 										</div>
 									</div>
@@ -45,7 +45,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 <!--<i class="fa fa-fw fa-shopping-bag fs-28px text-black-transparent-5"></i>-->
 											</div>
 											<div class="mt-1">
-												<div>Add Filter</div>
+												<div class="lang" key="filter">Add Filter</div>
 													<select  id="multiple" multiple name="filters" required>
 															{% for cat in category %}
 														  <option value="{{ cat.name }}">{{ cat.name|change_string }}</option>
@@ -71,7 +71,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 <!--<i class="fa fa-fw fa-shopping-bag fs-28px text-black-transparent-5"></i>-->
 											</div>
 											<div class="mt-1">
-												<div>Reschedule</div>
+												<div class="lang" key="schedule">Reschedule</div>
 												<div class="form-group">
 													<input type="number" min="1" value="3" name="reschedule_crawler" class="form-control form-control-sm"  required/>
 												</div>
@@ -149,8 +149,8 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 								<div class="card-body">
 									<div class="d-flex mb-3">
 										<div class="flex-grow-1">
-											<h5 class="mb-1 section-title">CRAWLER</h5>
-											<div class="fs-13px">Traffic </div>
+											<h5 class="mb-1 section-title lang" key="crawler">CRAWLER</h5>
+											<div class="fs-13px lang" key="traffic">Traffic </div>
 										</div>
 <a href="#" data-toggle="dropdown" class="text-muted" id="refresh_crawler"><i class="fa fa-redo"></i></a>
 									</div>
@@ -175,7 +175,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 										{% endfor %}
 
 										<div class="fs-12px text-right">
-<div><a href="{% url 'crawler:crawler_index' %}" class="text-decoration-none">See all <i class="fa fa-chevron-right ml-2 "></i></a>
+<div><a href="{% url 'crawler:crawler_index' %}" class="text-decoration-none lang" key="all">See all <i class="fa fa-chevron-right ml-2 "></i></a>
 									</div>
 										</div>
 									</div>
@@ -188,8 +188,8 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 								<div class="card-body">
 									<div class="d-flex mb-3">
 										<div class="flex-grow-1">
-											<h5 class="mb-1 section-title">SCRAPER</h5>
-											<div class="fs-13px">Traffic </div>
+											<h5 class="mb-1 section-title lang" key="scraper">SCRAPER</h5>
+											<div class="fs-13px lang" key="traffic">Traffic </div>
 										</div>
 <a href="#" data-toggle="dropdown" class="text-muted"><i class="fa fa-redo"></i></a>
 									</div>
@@ -214,7 +214,7 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 										{% endfor %}
 
 										<div class="fs-12px text-right">
-<div><a href="#" class="text-decoration-none">See all <i class="fa fa-chevron-right ml-2 "></i></a>
+<div><a href="#" class="text-decoration-none lang" key="all">See all <i class="fa fa-chevron-right ml-2 "></i></a>
 									</div>
 										</div>
 									</div>
@@ -229,8 +229,8 @@ Hi, {{ userprofile.user.username|capfirst }}.<small> tell us what you are crawli
 						<div class="card-body">
 							<div class="d-flex mb-3">
 								<div class="flex-grow-1">
-									<h5 class="mb-1 section-title">SCHEDULER</h5>
-									<div class="fs-13px">Rescraped data performance chart</div>
+									<h5 class="mb-1 section-title lang" key="schedule">SCHEDULER</h5>
+									<div class="fs-13px lang" key="chart">Rescraped data performance chart</div>
 								</div>
 <a href="#" data-toggle="dropdown" class="text-muted"><i class="fa fa-redo"></i></a>
 							</div>

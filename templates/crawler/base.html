@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 {% load static %}
 {% load crawlerapp_filter %}
 
@@ -17,7 +16,7 @@
 
 	<link href="{% static 'css/app.min.css' %}" rel="stylesheet" />
 	<link href="{% static 'plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}" rel="stylesheet" />
-
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<style>
 			/*
  *  STYLE 4
@@ -57,6 +56,72 @@
 	{% block custom_style %}{% endblock %}
 
 </head>
+<!--Multilingual Script-->
+	<script type="text/javascript">
+		var arrLang = {
+		  'en': {
+			'title': 'FALCON',
+			'profile': 'Edit Profile',
+			'inbox': 'Inbox',
+			'calendar': 'Calendar',
+			'setting' : 'Setting',
+			'logout' : 'Log Out',
+			'nav' : 'Navigation',
+			'crawler' : 'Crawler',
+			'report' : 'Report',
+			'schedule': 'Scheduler',
+			'admin' : 'Admin',
+			'map' : 'Map',
+			'helper' : 'Helper',
+			'search' : 'MAKE YOUR SEARCH',
+			'tell' : 'tell us what you are crawling today.',
+			'increase' : 'increase compare to last week',
+			'welcome' : 'Hi',
+			'scraper' : 'Scraper',
+			'filter' : 'Add filter',
+			'traffic' : 'Traffic',
+			"chart" : 'Rescraped data performance chart',
+			"all" : 'See all'
+		  },
+		  'hin': {
+			'title': 'फ़ॉल्कन',
+			'profile': 'प्रोफ़ाइल संपादित करें',
+			'inbox': 'इनबॉक्स',
+			'calendar': 'पंचांग',
+			'setting': 'स्थापना',
+			'logout': 'लॉग आउट',
+			'nav': 'नेविगेशन',
+			'crawler' : 'क्रॉलर',
+			'report' : 'रिपोर्ट',
+			'schedule' : 'अनुसूचक',
+			'admin' : 'व्यवस्थापक',
+			'map' : 'नक्शा',
+			'helper' : 'सहायक',
+			'search' : 'अपनी खोज बनाएँ',
+			'tell' : 'हमें बताएं कि आप आज क्या रेंग रहे हैं।',
+			'increase' : 'पिछले सप्ताह की तुलना में वृद्धि',
+			'welcome' : 'स्वागत',
+			'scraper' : 'खुरचनी',
+			'filter' : 'फ़िल्टर जोड़ें',
+			'traffic' : 'यातायात',
+			'chart' : 'डेटा प्रदर्शन चार्ट',
+			'all' : 'सभी देखें'
+		  }
+		};
+
+		// Process translation
+		$(function() {
+		  $('.translate').click(function() {
+			var lang = $(this).attr('id');
+
+			$('.lang').each(function(index, item) {
+			  $(this).text(arrLang[lang][$(this).attr('key')]);
+			});
+		  });
+		});
+	  </script>
+<!--mulitilingual end-->
+<!--Multilingual buttons-->
 
 <body id="style-4">
 	<div id="app" class="app">
@@ -68,13 +133,15 @@
 				</button>
 			</div>
 			<div class="brand">
+							<button id="en" class="translate">English</button>
+			<button id="hin" class="translate">हिन्दी</button>
 				<div class="desktop-toggler">
 					<button type="button" class="menu-toggler" data-toggle="sidebar-minify">
 <span class="bar"></span>
 						<span class="bar"></span>
 					</button>
 				</div>
-				<a href="{% url 'crawler:index' %}" class="brand-logo head-title">
+				<a href="{% url 'crawler:index' %}" class="brand-logo head-title lang" key="title">
 <!--					<img src="{% static 'img/logo.png' %}" height="40px" />-->
 					FALCON
 				</a>
@@ -109,12 +176,12 @@
 						</div>
 					</a>
 					<div class="dropdown-menu dropdown-menu-right mr-lg-3">
-<a class="dropdown-item d-flex align-items-center" href="#">Edit Profile <i class="fa fa-user-circle fa-fw ml-auto text-gray-400 f-s-16"></i></a>
-						<a class="dropdown-item d-flex align-items-center" href="#">Inbox <i class="fa fa-envelope fa-fw ml-auto text-gray-400 f-s-16"></i></a>
-						<a class="dropdown-item d-flex align-items-center" href="#">Calendar <i class="fa fa-calendar-alt fa-fw ml-auto text-gray-400 f-s-16"></i></a>
-						<a class="dropdown-item d-flex align-items-center" href="#">Setting <i class="fa fa-wrench fa-fw ml-auto text-gray-400 f-s-16"></i></a>
+<a class="dropdown-item d-flex align-items-center lang" key="profile" href="#">Edit Profile <i class="fa fa-user-circle fa-fw ml-auto text-gray-400 f-s-16"></i></a>
+						<a class="dropdown-item d-flex align-items-center lang" key="inbox" href="#">Inbox <i class="fa fa-envelope fa-fw ml-auto text-gray-400 f-s-16"></i></a>
+						<a class="dropdown-item d-flex align-items-center lang" key="calendar" href="#">Calendar <i class="fa fa-calendar-alt fa-fw ml-auto text-gray-400 f-s-16"></i></a>
+						<a class="dropdown-item d-flex align-items-center lang" key="setting" href="#">Setting <i class="fa fa-wrench fa-fw ml-auto text-gray-400 f-s-16"></i></a>
 						<div class="dropdown-divider"></div>
-<a class="dropdown-item d-flex align-items-center" href="{% url 'auth_logout' %}">Log Out <i class="fa fa-toggle-off fa-fw ml-auto text-gray-400 f-s-16"></i></a>
+<a class="dropdown-item d-flex align-items-center lang" key="logout" href="{% url 'auth_logout' %}">Log Out <i class="fa fa-toggle-off fa-fw ml-auto text-gray-400 f-s-16"></i></a>
 					</div>
 				</div>
 			</div>
@@ -122,7 +189,7 @@
 		<sidebar id="sidebar" class="app-sidebar">
 			<div class="app-sidebar-content" data-scrollbar="true" data-height="100%">
 				<div class="menu">
-					<div class="menu-header">Navigation</div>
+					<div class="menu-header lang" key="nav">Navigation</div>
 					<div class="menu-item {% if home %}active{% endif %}">
 						<a href="{% url 'crawler:index' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-laptop"></i></span>
@@ -132,7 +199,7 @@
 					<div class="menu-item {% if report %}active{% endif %}">
 						<a href="{% url 'crawler:report' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-chart-pie"></i></span>
-							<span class="menu-text">Report</span>
+							<span class="menu-text lang" key="report">Report</span>
 						</a>
 					</div>
 					<div class="menu-divider"></div>
@@ -140,58 +207,58 @@
 					<div class="menu-item {% if crawler_home %}active{% endif %}">
 						<a href="{% url 'crawler:crawler_index' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-snowflake"></i></span>
-							<span class="menu-text">Crawler</span>
+							<span class="menu-text lang" key="crawler">Crawler</span>
 						</a>
 					</div>
 					<div class="menu-item">
 						<a href="{% url 'crawler:scheduler:index' %}" class="menu-link">
 <span class="menu-icon"><i class="fa fa-star"></i></span>
-							<span class="menu-text">Scheduler</span>
+							<span class="menu-text lang" key="schedule">Scheduler</span>
 						</a>
 					</div>
 					<div class="menu-item">
 						<a href="/admin" class="menu-link">
 <span class="menu-icon"><i class="fa fa-fire"></i></span>
-							<span class="menu-text">Admin</span>
+							<span class="menu-text lang" key="admin">Admin</span>
 						</a>
 					</div>
 
 					<div class="menu-item">
 						<a href="map.html" class="menu-link">
 <span class="menu-icon"><i class="fa fa-map-marker-alt"></i></span>
-							<span class="menu-text">Map</span>
+							<span class="menu-text map lang" key="map">Map</span>
 						</a>
 					</div>
 
 					<div class="menu-divider"></div>
-					<div class="menu-header">Users</div>
+					<div class="menu-header lang" key="users">Users</div>
 					<div class="menu-item">
 						<a href="profile.html" class="menu-link">
 <span class="menu-icon"><i class="fa fa-user-circle"></i></span>
-							<span class="menu-text">Profile</span>
+							<span class="menu-text lang" key="profile">Profile</span>
 						</a>
 					</div>
 					<div class="menu-item">
 						<a href="calendar.html" class="menu-link">
 <span class="menu-icon"><i class="fa fa-calendar"></i></span>
-							<span class="menu-text">Calendar</span>
+							<span class="menu-text lang" key="calendar">Calendar</span>
 						</a>
 					</div>
 					<div class="menu-item">
 						<a href="settings.html" class="menu-link">
 <span class="menu-icon"><i class="fa fa-cog"></i></span>
-							<span class="menu-text">Settings</span>
+							<span class="menu-text lang" key="setting">Settings</span>
 						</a>
 					</div>
 					<div class="menu-item">
 						<a href="helper.html" class="menu-link">
 <span class="menu-icon"><i class="fa fa-question-circle"></i></span>
-							<span class="menu-text">Helper</span>
+							<span class="menu-text lang" key="helper">Helper</span>
 						</a>
 					</div>
 					<div class="p-3 px-4 mt-auto hide-on-minified">
 						<a href="{% url 'auth_logout' %}" class="section-title btn btn-block btn-secondary font-weight-600 rounded-pill">
-<i class="fa fa-code-branch mr-1 ml-n1 opacity-5"></i> LOGOUT</a>
+<i class="fa fa-code-branch mr-1 ml-n1 opacity-5 lang" key="logout"></i> LOGOUT</a>
 					</div>
 				</div>
 			</div>
