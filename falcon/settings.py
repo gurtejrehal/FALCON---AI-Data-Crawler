@@ -135,3 +135,5 @@ REGISTRATION_AUTO_LOGIN = True
 LOGIN_URL = 'auth_login'
 LOGIN_REDIRECT_URL = 'crawler:index'
 LOGOUT_REDIRECT_URL = '/'
+
+# CELERY_BROKER_URL = 'amqp://user:guest@rabbitmq:5672//'

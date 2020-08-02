@@ -1,7 +1,9 @@
+from celery import shared_task
+from datetime import datetime, timedelta
 from scheduler.models import ScrapedLink, RescrapedLink
 from utils.score import Score
 
-
+@shared_task
 def rescrape_save(old_link, new_data):
     check = Score()
     old_data = ScrapedLink.objects.get(link=old_link)
@@ -14,6 +16,12 @@ def rescrape_save(old_link, new_data):
         done = True
 
     return done
+
+
+
+
+scheduled_day = datetime.utcnow() + timedelta(days=1)
+rescrape_save.apply_async(eta=scheduled_day)
 
 
 
