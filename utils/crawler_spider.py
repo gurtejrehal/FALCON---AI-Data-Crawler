@@ -3,7 +3,7 @@ import re
 import random
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
-# from twitterscraper import query_tweets
+from twitterscraper import query_tweets
 import datetime as dt
 from ast import literal_eval
 
