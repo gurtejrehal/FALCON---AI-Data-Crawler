@@ -1,3 +1,5 @@
+from celery import shared_task
+from rotatingIP.models import IP
 import requests
 from lxml.html import fromstring
 import random
@@ -14,6 +16,12 @@ def get_proxies(url):
             proxy = ":".join([i.xpath('.//td[1]/text()')[0], i.xpath('.//td[2]/text()')[0]])
             proxies.add(proxy)
     return proxies
+
+
+@shared_task
+def save_proxy(ip):
+    proxy = IP.objects.get_or_create(ip=ip)[0]
+    proxy.save()
 
 
 def random_header():

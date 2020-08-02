@@ -20,8 +20,8 @@ def rescrape_save(old_link, new_data):
 
 
 
-scheduled_day = datetime.utcnow() + timedelta(days=1)
-rescrape_save.apply_async(eta=scheduled_day)
+# scheduled_day = datetime.utcnow() + timedelta(days=1)
+# rescrape_save.apply_async(eta=scheduled_day)
 
 
 
