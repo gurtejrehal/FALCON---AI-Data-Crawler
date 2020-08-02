@@ -3,9 +3,10 @@ from django.contrib.auth.decorators import login_required
 from crawler.models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
 from scheduler.models import ScrapedLink
 from django.contrib import messages
-from utils.crawler_spider import crawling, count_items, wiki_data, wiki_scraping, social_media_scrape, extract_image
+from utils.crawler_spider import crawling, count_items, wiki_data, wiki_scraping, social_media_scrape, extract_image, create_predict_image
 from utils.news import news
 from utils.analytics import category_percent, category_count, keyword_trends
+from utils.image_processing import category_predict
 import random, copy, json
 from django.http import JsonResponse
 from django.db.models import Count
@@ -367,8 +368,10 @@ def process(request):
         # print(wiki_links)
         # wikis = wiki_data(list(set(wiki_links)))
         print(wiki_scrape_temp)
-        images_updated = list(filter(None, images))
 
+        images_updated = list(filter(None, images))
+        image_predict = category_predict(images_updated)
+        print("reachig here")
         context = {
             'home': True,
             'userprofile': userprofile,
@@ -390,7 +393,8 @@ def process(request):
             'video_links': list(set(video_links))[:5],
             'pdfs': pdfs,
             'scrape_data_dict_main': scrape_data_dict_main,
-            'images': images_updated
+            'images': images_updated,
+            'image_predict': image_predict
         }
 
         return render(request, 'crawler/result.html', context=context)

@@ -1,5 +1,6 @@
 {% extends 'crawler/base.html' %}
 {% load static %}
+{% load crawlerapp_filter %}
 
 {% block title %} Showing results {% endblock %}
 
@@ -42,6 +43,14 @@
 			height: 10px;
 			margin-right: 10px;
 		}
+
+		.blur {
+        filter: blur(5px);
+        transition: 1s;
+      }
+      .blur:hover {
+        filter: blur(0px);
+      }
  </style>
 
   {% endblock %}
@@ -152,12 +161,17 @@
         {% endif %}
 
 
-        {% if images %}
-        {% for image in images %}
+        {% if image_predict %}
+        {% for image, lists in image_predict.items %}
         <div class="card text-white text-center p-3 bg-gray-800">
           <blockquote class="blockquote mb-0">
 
-            <img class="img-thumbnail m-2" src="{{ image }}" alt="{{ image }} pictures" >
+            <img class="img-thumbnail m-2 {% if lists.1|percent > 80 or lists.2|percent > 80 %}blur{% endif %}" src="{{ image }}" alt="{{ image }} pictures" >
+            <div class="d-flex bd-highlight">
+              <div class="p-2 flex-fill bd-highlight section-title">Child Abuse: {{ lists.0|percent }} %</div>
+              <div class="p-2 flex-fill bd-highlight section-title">Murder: {{ lists.1|percent }} %</div>
+              <div class="p-2 flex-fill bd-highlight section-title">Rape: {{ lists.2|percent }} %</div>
+            </div>
 
             <footer class="blockquote-footer">
               <small>
@@ -168,6 +182,24 @@
         </div>
         {% endfor %}
         {% endif %}
+
+
+<!--        {% if images %}-->
+<!--        {% for image in images %}-->
+<!--        <div class="card text-white text-center p-3 bg-gray-800">-->
+<!--          <blockquote class="blockquote mb-0">-->
+
+<!--            <img class="img-thumbnail m-2" src="{{ image }}" alt="{{ image }} pictures" >-->
+
+<!--            <footer class="blockquote-footer">-->
+<!--              <small>-->
+<!--                Crawled by <cite title="Source Title">FALCON</cite>-->
+<!--              </small>-->
+<!--            </footer>-->
+<!--          </blockquote>-->
+<!--        </div>-->
+<!--        {% endfor %}-->
+<!--        {% endif %}-->
 
 
 

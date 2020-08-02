@@ -16,6 +16,11 @@ def format_id(value):
 def count_items(value):
     return value.count()
 
+@register.filter(name='percent')
+def percent(value):
+    return round(value*100, 2)
+
+
 @register.filter(name='jsonify_data')
 def jsonify_data(value):
     print(json.dumps(value))

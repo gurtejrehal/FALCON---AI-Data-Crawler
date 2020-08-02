@@ -7,7 +7,8 @@ from twitterscraper import query_tweets
 import datetime as dt
 from ast import literal_eval
 
-api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
+# api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
+api_key = "AIzaSyBY3D5gqznxYGxXnnFDMscDHXMd2FRiVOc"
 cse_id = "016133495723645302024:cfibqauizrm"
 
 
@@ -283,3 +284,13 @@ def extract_image(data):
         return image
     except:
         pass
+
+
+def create_predict_image(images, images_list):
+    context = dict()
+    for image in images:
+        for image_list in images_list:
+            context[image] = image_list
+
+    return context
+
