@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
 from twitterscraper import query_tweets
 import datetime as dt
+from ast import literal_eval
 
 api_key = "AIzaSyA-xf1iJjNQCELDVGDtYJ7aM0t1ZulB0kQ"
 cse_id = "016133495723645302024:cfibqauizrm"
@@ -273,3 +274,12 @@ def social_media_scrape(keyword):
     query = str(keyword) + " " + keywords[0]
     tweets = query_tweets(query, limit=1, begindate=dt.date(2020, 3, 21))
     return tweets
+
+
+def extract_image(data):
+    print("exttracting images", data)
+    try:
+        image = data['pagemap']['metatags'][0]['og:image']
+        return image
+    except:
+        pass

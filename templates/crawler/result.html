@@ -152,6 +152,26 @@
         {% endif %}
 
 
+        {% if images %}
+        {% for image in images %}
+        <div class="card text-white text-center p-3 bg-gray-800">
+          <blockquote class="blockquote mb-0">
+
+            <img class="img-thumbnail m-2" src="{{ image }}" alt="{{ image }} pictures" >
+
+            <footer class="blockquote-footer">
+              <small>
+                Crawled by <cite title="Source Title">FALCON</cite>
+              </small>
+            </footer>
+          </blockquote>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+
+
+
       </div>
 
 
