@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from crawler.models import UserProfile, Category, Notifications
 from scheduler.models import ScrapedLink, RescrapedLink
+from scheduler.tasks import rescrape_one
 
 def index(request):
     """
@@ -51,3 +52,15 @@ def search(request):
         }
 
         return render(None, "scheduler/search.html", context=context)
+
+
+
+def scheduler_one(request):
+    """
+    Test for one
+    :param request:
+    :return:
+    """
+
+    done, score = rescrape_one()
+    return HttpResponse(f"done {done} and score is {score}")
