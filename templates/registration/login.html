@@ -9,9 +9,11 @@
 	<meta content="" name="description" />
 	<meta content="" name="author" />
 	<link href="{% static 'css/app.min.css' %}" rel="stylesheet" />
+	<link href="{% static 'js/lang.js' %}" rel="stylesheet"/>
 	<link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="favicon.png" />
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@400;800&display=swap" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 	<style>
 .head-title{
 	font-family: 'Montserrat';
@@ -29,6 +31,44 @@
 </head>
 
 <body>
+<!--Multilingual Script-->
+	<script type="text/javascript">
+		var arrLang = {
+		  'en': {
+			'username': 'USERNAME',
+			'password': 'PASSWORD',
+			'protection': 'For your protection, please verify your identity.',
+			'sign': 'SIGN IN',
+			'remember' : 'Remember me',
+			'forgot' : 'Forgot password?'
+		  },
+		  'hin': {
+			'username': 'उपयोगकर्ता नाम',
+			'password': 'पासवर्ड',
+			'protection': 'आपकी सुरक्षा के लिए, कृपया अपनी पहचान सत्यापित करें।',
+			'sign': 'साइन इन करें',
+			'remember': 'मुझे याद रखना',
+			'account': 'अब तक कोई खाता नहीं है? साइन अप करें।',
+			'forgot': ''
+		  }
+		};
+
+		// Process translation
+		$(function() {
+		  $('.translate').click(function() {
+			var lang = $(this).attr('id');
+
+			$('.lang').each(function(index, item) {
+			  $(this).text(arrLang[lang][$(this).attr('key')]);
+			});
+		  });
+		});
+	  </script>
+<!--mulitilingual end-->
+
+<!--buttons for lang-->
+  <button id="en" class="translate">English</button>
+  <button id="hin" class="translate">हिन्दी</button>
 	<div id="app" class="app app-full-height app-without-header">
 		<div class="login">
 			<div class="login-content">
@@ -36,27 +76,27 @@
 					{% csrf_token %}
 <!--					{{ form.as_p }}-->
 					<h1 class="text-center head-title"><img src="{% static 'img/logo.png' %}" alt="FALCON logo"></h1>
-					<div class="text-muted text-center mb-4">For your protection, please verify your identity.</div>
+					<div class="text-muted text-center mb-4 lang" key="protection">For your protection, please verify your identity.</div>
 					<div class="form-group">
-						<label for="id_username" class="section-title">USERNAME</label>
+						<label id="username" for="id_username" class="section-title lang" key="username">USERNAME</label>
 						<input name="username" type="text" class="section-title form-control form-control-lg fs-15px" value="" placeholder="username" id="id_username"/>
 					</div>
 					<div class="form-group">
 						<div class="d-flex">
-							<label for="id_password" class="section-title">PASSWORD</label>
-<a href="#" class="ml-auto text-muted">Forgot password?</a>
+							<label for="id_password" class="section-title lang" key="password">PASSWORD</label>
+<a href="#" class="ml-auto text-muted lang" key="forgot">Forgot password?</a>
 						</div>
 						<input name="password" type="password" class="section-title form-control form-control-lg fs-15px" value="" placeholder="Enter your password" id="id_password"/>
 					</div>
 					<div class="form-group">
 						<div class="custom-control custom-checkbox">
 							<input class="custom-control-input" type="checkbox" value="" id="customCheck1" />
-							<label class="custom-control-label fw-500" for="customCheck1">Remember me</label>
+							<label class="custom-control-label fw-500 lang" key="remember" for="customCheck1">Remember me</label>
 						</div>
 					</div>
-					<button type="submit" class="section-title btn btn-primary btn-lg btn-block fw-500 mb-3">SIGN IN</button>
+					<button type="submit" class="section-title btn btn-primary btn-lg btn-block fw-500 mb-3 lang" key="sign">SIGN IN</button>
 					<input type="hidden" name="next" value="{{ next }}" />
-					<div class="text-center text-muted">Don't have an account yet? <a href="page_register.html">Sign up</a>.</div>
+					<div class="text-center text-muted lang" key="account">Don't have an account yet? <a href="page_register.html">Sign up</a>.</div>
 				</form>
 			</div>
 		</div>
