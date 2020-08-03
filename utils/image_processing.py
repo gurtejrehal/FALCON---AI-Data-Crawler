@@ -3,7 +3,8 @@ from keras.applications.inception_v3 import InceptionV3, preprocess_input
 from keras.preprocessing import image
 from keras.models import load_model
 import urllib.request
-import os
+from celery import shared_task
+import os, socket
 
 
 def predict(model, img):
@@ -13,13 +14,14 @@ def predict(model, img):
     preds = model.predict(x)
     return preds[0]
 
-
+@shared_task
 def category_predict(imgs):
     j = 0
     predictions = list()
     context = dict()
     model = load_model('filename.model')
     for i in imgs:
+        socket.setdefaulttimeout(5)
         try:
             urllib.request.urlretrieve( i, f"static/temp/cache_{j}.jpg")
             print("success")
@@ -31,7 +33,7 @@ def category_predict(imgs):
         except:
             print("failed")
             j += 1
-            continue
+            pass
 
     print("done all")
     return context

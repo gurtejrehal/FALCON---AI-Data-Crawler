@@ -14,6 +14,15 @@ class NotificationsAdmin(admin.ModelAdmin):
     class Meta:
         verbose_name_plural = 'Notifications'
 
+
+class SocialMediaAdmin(admin.ModelAdmin):
+    list_display = ('keyword', 'timestamp', )
+    search_fields = ['keyword']
+    list_filter = ['keyword', 'timestamp']
+
+    class Meta:
+        verbose_name_plural = 'Social Media'
+
 class LinkAdmin(admin.ModelAdmin):
     list_display = ('keyword', 'category', 'link',)
     search_fields = ['keyword', 'category']
@@ -32,8 +41,8 @@ class CrawledLinksAdmin(admin.ModelAdmin):
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Notifications, NotificationsAdmin)
 
-admin.site.register(SocialMedia)
 admin.site.register(Keyword)
 admin.site.register(Category)
 admin.site.register(Link, LinkAdmin)
 admin.site.register(CrawledLinks, CrawledLinksAdmin)
+admin.site.register(SocialMedia, SocialMediaAdmin)

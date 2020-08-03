@@ -154,8 +154,9 @@ def calendar(request):
 def social(request):
     if request.method == 'POST':
         keyword = request.POST.get('keyword')
-        key = Keyword.objects.get(name=keyword)
-        scrape_data = SocialMedia.objects.filter(keyword=key)
+        # key = Keyword.objects.get(name=keyword)
+        # scrape_data = SocialMedia.objects.filter(keyword=key)
+        scrape_data = social_media_scrape(keyword)
         context = {
             'scrape_data': scrape_data
         }
@@ -350,7 +351,8 @@ def process(request):
                     save_models.delay(query.name, cat.name, link[0], scrape_data, reschedule_crawler,
                                       userprofile.user.username)
 
-                    scrape_social.delay(keyword)
+                    # scrape_social.delay(keyword)
+
                     # scraped_link = ScrapedLink.objects.get_or_create(link=link[0], scrape_data=scrape_data,
                     #                                                  schedule_day=reschedule_crawler)[0]
                     # scraped_link.save()
