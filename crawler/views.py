@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
-from crawler.models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
+from crawler.models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks, SocialMedia
 from scheduler.models import ScrapedLink
 from django.contrib import messages
 from utils.crawler_spider import crawling, count_items, wiki_data, wiki_scraping, social_media_scrape, extract_image, create_predict_image
@@ -9,7 +9,7 @@ from utils.analytics import category_percent, category_count, keyword_trends
 from utils.image_processing import category_predict
 import random, copy, json
 from django.http import JsonResponse
-from crawler.tasks import save_models
+from crawler.tasks import save_models, scrape_social
 from django.db.models import Count
 
 
@@ -154,7 +154,8 @@ def calendar(request):
 def social(request):
     if request.method == 'POST':
         keyword = request.POST.get('keyword')
-        scrape_data = social_media_scrape(keyword)
+        key = Keyword.objects.get(name=keyword)
+        scrape_data = SocialMedia.objects.filter(keyword=key)
         context = {
             'scrape_data': scrape_data
         }
@@ -349,6 +350,7 @@ def process(request):
                     save_models.delay(query.name, cat.name, link[0], scrape_data, reschedule_crawler,
                                       userprofile.user.username)
 
+                    scrape_social.delay(keyword)
                     # scraped_link = ScrapedLink.objects.get_or_create(link=link[0], scrape_data=scrape_data,
                     #                                                  schedule_day=reschedule_crawler)[0]
                     # scraped_link.save()

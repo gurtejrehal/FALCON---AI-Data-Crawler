@@ -53,6 +53,24 @@ class Link(models.Model):
         return str(self.link) + "for keyword " + str(self.keyword) + " in category " + str(self.category)
 
 
+class SocialMedia(models.Model):
+    """
+    Social Media scrape data
+    """
+    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField()
+    screen_name = models.CharField(max_length=50)
+    username = models.CharField(max_length=50)
+    tweet_url = models.CharField(max_length=100)
+    text = models.TextField(max_length=500)
+    hashtags = models.CharField(max_length=100)
+    likes = models.CharField(max_length=30)
+    retweets = models.CharField(max_length=30)
+
+
+    def __str__(self):
+        return self.keyword.name
+
 
 class UserProfile(models.Model):
     """

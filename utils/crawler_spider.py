@@ -3,7 +3,7 @@ import re
 import random
 from bs4 import BeautifulSoup
 from googleapiclient.discovery import build
-# from twitterscraper import query_tweets
+from twitterscraper import query_tweets
 import datetime as dt
 from ast import literal_eval
 
@@ -273,7 +273,7 @@ def social_media_scrape(keyword):
     temp = {}
     base_url = 'twitter.com'
     query = str(keyword) + " " + keywords[0]
-    tweets = query_tweets(query, limit=1, begindate=dt.date(2020, 3, 21))
+    tweets = query_tweets(query, limit=10, begindate=dt.date(2020, 5, 21))
     return tweets
 
 

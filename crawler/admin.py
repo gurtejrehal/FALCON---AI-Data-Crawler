@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks
+from .models import UserProfile, Notifications, Keyword, Category, Link, CrawledLinks, SocialMedia
 
 admin.site.site_header = 'Falcon administration'
 
@@ -32,7 +32,7 @@ class CrawledLinksAdmin(admin.ModelAdmin):
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Notifications, NotificationsAdmin)
 
-
+admin.site.register(SocialMedia)
 admin.site.register(Keyword)
 admin.site.register(Category)
 admin.site.register(Link, LinkAdmin)
