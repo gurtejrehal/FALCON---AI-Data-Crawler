@@ -21,7 +21,7 @@ FALCON is capable of crawling ten million links and scrape one million links per
 
 
 ## Deployed on Pythonanywhere
-The first version of FALCON (only a demo version) is deployed, it is limited to threaded crawling/scraping. AI tasks and CELERY worker are disabled due to free hosting service provider. To experience FALCON to its full capability please install it and use.
+The first version of FALCON (only a demo version) is deployed, it is limited to threaded crawling/scraping. AI tasks and CELERY workers are disabled due to free hosting service provider. To experience FALCON to its full capability please [install](#how-to-install) it and use.
 
 Deployed [here](http://sih2020sk216slytherin.pythonanywhere.com "here").
 
