@@ -45,6 +45,7 @@ password - Sih#2020
 - Search with rotating proxy to avoid ban.
 - Falcon own custom REST API
 - Multilingual support
+- Media data AI Processing
 - Scalable to Crawl 10 Millions Link and Scrape 1 Million Links
 
 
