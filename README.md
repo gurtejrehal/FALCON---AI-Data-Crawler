@@ -21,6 +21,7 @@ FALCON is capable of crawling ten million links and scrape one million links per
 
 
 ## Deployed on Pythonanywhere
+The first version of FALCON (only a demo version) is deployed, it is limited to threaded crawling/scraping. AI tasks and CELERY worker are disabled due to free hosting service provider. To experience FALCON to its full capability please install it and use.
 
 Deployed [here](http://sih2020sk216slytherin.pythonanywhere.com "here").
 
@@ -67,7 +68,7 @@ We can have upto 10 celery workers at a time. This feature allows us to crawl ar
 - Install all the requirements file, ``` pip install -r requirements.txt```
 - Setup RabbitMQ server for broker service, ``` docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management```
 - start your rabbitmq broker service.
-- In falcon setting change ```CELERY_BROKER_URL = 'your_rabbitmq_address```, if your not using the default port for RabbitMQ.
+- In falcon setting change ```CELERY_BROKER_URL = 'your_rabbitmq_address'```, if your not using the default port for RabbitMQ.
 - Run celery worker, ```celery -A falcon worker -l info```
 - For first time usage, ```python manage.py migrate``` and create admin ```python manage.py createsuperuser```
 - Run FALCON, ```python manage.py runserver```
