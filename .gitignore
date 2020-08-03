@@ -8,3 +8,4 @@
 .tox
 .env
 db.sqlite3
+static/temp/

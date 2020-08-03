@@ -9,6 +9,7 @@ from utils.analytics import category_percent, category_count, keyword_trends
 from utils.image_processing import category_predict
 import random, copy, json
 from django.http import JsonResponse
+from crawler.tasks import save_models
 from django.db.models import Count
 
 
@@ -33,7 +34,7 @@ def index(request):
     context['userprofile'] = userprofile
     context['notifications'] = notifications[:5]
     context['unread_count'] = len(unread)
-    context['user_crawler'] = user_crawled_links[:5]
+    context['user_crawler'] = user_crawled_links[:userprofile.recent_link]
     context['cat_percent'] = category_percent(request.user)
 
     return render(request, "crawler/index.html", context=context)
@@ -344,23 +345,27 @@ def process(request):
 
                     scrape_data_dict[link[0]] = scrape_data
 
-                    scraped_link = ScrapedLink.objects.get_or_create(link=link[0], scrape_data=scrape_data,
-                                                                     schedule_day=reschedule_crawler)[0]
-                    scraped_link.save()
 
-                    link = Link.objects.get_or_create(keyword=query, category=cat, link=link[0], scrape_data=scrape_data)[0]
-                    link.save()
+                    save_models.delay(query.name, cat.name, link[0], scrape_data, reschedule_crawler,
+                                      userprofile.user.username)
 
-                    profile_update, created = CrawledLinks.objects.get_or_create(userprofile=userprofile,
-                                                                                 link=link, reschedule=reschedule_crawler)
-                    profile_update.save()
+                    # scraped_link = ScrapedLink.objects.get_or_create(link=link[0], scrape_data=scrape_data,
+                    #                                                  schedule_day=reschedule_crawler)[0]
+                    # scraped_link.save()
+                    #
+                    # link = Link.objects.get_or_create(keyword=query, category=cat, link=link[0], scrape_data=scrape_data)[0]
+                    # link.save()
 
-                    if created:
-                        no_of_links += 1
+                    # profile_update, created = CrawledLinks.objects.get_or_create(userprofile=userprofile,
+                    #                                                              link=link, reschedule=reschedule_crawler)
+                    # profile_update.save()
+                    #
+                    # if created:
+                    #     no_of_links += 1
 
             scrape_data_dict_main[keyword] = scrape_data_dict
 
-        userprofile.crawled_links += no_of_links
+        # userprofile.crawled_links += no_of_links
         userprofile.scraped_data += no_of_scrape
         userprofile.save()
 
@@ -395,7 +400,6 @@ def process(request):
 
         images_updated = list(filter(None, images))
         image_predict = category_predict(images_updated)
-        print("reachig here")
         context = {
             'home': True,
             'userprofile': userprofile,

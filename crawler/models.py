@@ -63,7 +63,7 @@ class UserProfile(models.Model):
     crawled_links = models.IntegerField(default=0)
     scraped_data = models.IntegerField(default=0)
     concurrency = models.IntegerField(default=1)
-
+    recent_link = models.IntegerField(default=5)
 
     def __str__(self):
         return self.user.username
