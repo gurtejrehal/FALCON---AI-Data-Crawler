@@ -6,6 +6,8 @@
 
 ![Screenshot from 2020-07-31 23-56-55](https://user-images.githubusercontent.com/28597524/89068756-872ed980-d38f-11ea-99ca-829d82cc43f9.png "FALCON")
 
+see installtion [here](#how-to-install)
+
 ## What is this?
 Falcon Search has been created to aid the National Crime Records Bureau keeping in mind the need for an efficient data crawler that collects classified data from the web based on given keywords. It is a SaaS web data integration (WDI) platform which converts unstructured web data into structured format by extracting, preparing and integrating web data in areas of crime for consumption in criminal investigation agencies. 
 
@@ -59,6 +61,15 @@ password - Sih#2020
 FALCON uses the celery worker feature to take up multiple tasks from the user and perform it in a queue.
 We can have upto 10 celery workers at a time. This feature allows us to crawl around ten million links and scrap around one million links.
 
+
+## How to Install
+- Create virtual enviorement
+- Install all the requirements file, ``` pip install -r requirements.txt```
+- Setup RabbitMQ server for broker service, ``` docker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management```
+- In falcon setting change ```CELERY_BROKER_URL = 'your_rabbitmq_address```, if your not using the default port for RabbitMQ
+- Run celery worker, ```celery -A falcon worker -l info```
+- For first time usage, ```python manage.py migrate``` and create admin ```python manage.py createsuperuser```
+- Run FALCON, ```python manager.py runserver```
 
 
 
