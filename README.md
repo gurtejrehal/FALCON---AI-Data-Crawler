@@ -4,7 +4,7 @@
 
 ## FALCON - AI Data Crawler
 
-![Screenshot from 2020-07-31 23-56-55](https://user-images.githubusercontent.com/28597524/89068756-872ed980-d38f-11ea-99ca-829d82cc43f9.png "FALCON")
+![falcon](https://user-images.githubusercontent.com/28597524/99408790-9d4caf80-2916-11eb-8ffa-d6e67ae9d10a.png "FALCON")
 
 See installation [here](#how-to-install)
 
