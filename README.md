@@ -4,8 +4,6 @@
 
 ## FALCON - AI Data Crawler
 
-![falcon](https://user-images.githubusercontent.com/28597524/99408790-9d4caf80-2916-11eb-8ffa-d6e67ae9d10a.png "FALCON")
-
 See installation [here](#how-to-install)
 
 ## What is this?
@@ -50,11 +48,6 @@ password - Sih#2020
 - Multilingual support
 - Media data AI Processing
 - Scalable to Crawl 10 Millions Link and Scrape 1 Million Links
-
-
-![collage (1)](https://user-images.githubusercontent.com/28597524/89094557-b4f13e00-d3e2-11ea-8bb6-13c6b3111271.jpg "FALCON Results")
-
-
 
 
 
