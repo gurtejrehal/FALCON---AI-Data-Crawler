@@ -17,6 +17,9 @@ For consuming the results, Falcon provides several options. It has its own visua
 
 FALCON is capable of crawling ten million links and scrape one million links per month using Celery Worker. It moreover has the potential of outperforming this number if tested under standard cloud platforms. 
 
+![falcon](https://user-images.githubusercontent.com/28597524/100134752-b1f8ec80-2eae-11eb-9852-51a6c2e5a5ba.png "FALCON")
+
+
 
 ## Deployed on Pythonanywhere
 The first version of FALCON (only a demo version) is deployed, it is limited to threaded crawling/scraping. AI tasks and CELERY workers are disabled due to free hosting service provider. To experience FALCON to its full capability please [install](#how-to-install) it and use.
@@ -48,6 +51,9 @@ password - Sih#2020
 - Multilingual support
 - Media data AI Processing
 - Scalable to Crawl 10 Millions Link and Scrape 1 Million Links
+
+
+![collage (1)](https://user-images.githubusercontent.com/28597524/100134680-9392f100-2eae-11eb-9e32-071c90947766.jpg "FALCON")
 
 
 
