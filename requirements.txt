@@ -27,7 +27,7 @@ googleapis-common-protos==1.52.0
 GoogleNews==1.4.0
 grpcio==1.30.0
 h5py==2.10.0
-httplib2==0.18.1
+httplib2==0.19.0
 idna==2.10
 importlib-metadata==1.7.0
 Keras==2.4.3
